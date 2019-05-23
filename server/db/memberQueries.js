@@ -3,14 +3,8 @@
  * @author Giovanni Guadagnini <giovanni.guadagnini@studenti.unitn.it>
  */
 
-const Pool = require('pg').Pool
-const pool = new Pool({
-  user: 'me',
-  host: 'localhost',
-  database: 'api',
-  password: 'password',
-  port: 5432,
-})
+const connection = require('./connection');
+const pool = connection.pool;
 
 const getMembers = (request, response) => {
   pool.query('SELECT * FROM member ORDER BY id ASC', (error, results) => {

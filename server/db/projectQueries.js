@@ -9,8 +9,8 @@ const pool = connection.pool;
 const getProjects = (request, response) => {
   pool.query('SELECT * FROM project ORDER BY id ASC', (error, results) => {
     if (error) {
-      response.status(400).send("Bad Request");
-      throw error;
+      console.log(err);
+      return response.status(400).send("Bad Request");
     }
     response.status(200).json(results.rows);
   })
@@ -21,8 +21,8 @@ const getProjectById = (request, response) => {
   if(id != undefined){
     pool.query('SELECT * FROM project WHERE id = $1', [id], (error, results) => {
       if (error) {
+        console.log(err);
         response.status(404).send("Project not found");
-        throw error;
       }
       response.status(200).json(results.rows)
     })
@@ -36,8 +36,8 @@ const createProject = (request, response) => {
 
   pool.query('INSERT INTO project (name, description, creation_date) VALUES (\'$1\', \'$2\', $3)', [name, description, creation_date ], (error, results) => {
     if (error) {
+      console.log(err);
       response.status(400).send("Bad Request");
-      throw error;
     }
     response.status(201).send(`Project added with ID: ${result.insertId}`);
   })
@@ -53,8 +53,8 @@ const updateProject = (request, response) => {
       [name, description, creation_date, id],
       (error, results) => {
         if (error) {
+          console.log(err);
           response.status(404).send("Project not found");
-          throw error
         }
         response.status(200).send(`Project modified with ID: ${id}`);
       }
@@ -69,8 +69,8 @@ const deleteProject = (request, response) => {
   if(id != undefined){
     pool.query('DELETE FROM project WHERE id = $1', [id], (error, results) => {
       if (error) {
+        console.log(err);
         response.status(404).send("Project not found");
-        throw error
       }
       response.status(200).send(`Project deleted with ID: ${id}`)
     })

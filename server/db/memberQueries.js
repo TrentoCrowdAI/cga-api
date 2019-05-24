@@ -6,15 +6,16 @@
 const connection = require('./connection');
 const pool = connection.pool;
 
-const getMembers = (request, response) => {
+const getMembers = (req, res, next) => {
   pool.query('SELECT * FROM member ORDER BY id ASC', (error, results) => {
+    done();
     if (error) {
+      console.log(err);
       response.status(400).send("Bad Request");
-      throw error;
     }
     response.status(200).json(results.rows);
   })
-}
+};
 
 const getMemberById = (request, response) => {
   var project_id = parseInt(request.params.id1);
@@ -22,8 +23,8 @@ const getMemberById = (request, response) => {
   if(id != undefined){
     pool.query('SELECT * FROM member WHERE project_id = $1 AND user_id = $2', [project_id, user_id], (error, results) => {
       if (error) {
+        console.log(err);
         response.status(404).send("Member not found");
-        throw error;
       }
       response.status(200).json(results.rows)
     })
@@ -39,8 +40,8 @@ const createMember = (request, response) => {
 
   pool.query('INSERT INTO member (project_id, user_id, status, create_at, role_id) VALUES ($1, $2, \'$3\', $4, $5)', [project_id, user_id, status, create_at, role_id ], (error, results) => {
     if (error) {
+      console.log(err);
       response.status(400).send("Bad Request");
-      throw error;
     }
     response.status(201).send(`Member added with ID: ${result.insertId}`);
   })
@@ -57,8 +58,8 @@ const updateMember = (request, response) => {
       [name, description, creation_date, id],
       (error, results) => {
         if (error) {
+          console.log(err);
           response.status(404).send("Member not found");
-          throw error
         }
         response.status(200).send(`Member modified with ID: ${id}`);
       }
@@ -74,8 +75,8 @@ const deleteMember = (request, response) => {
   if(id != undefined){
     pool.query('DELETE FROM member WHERE project_id = $1 AND user_id = $2', [project_id, user_id], (error, results) => {
       if (error) {
+        console.log(err);
         response.status(404).send("Member not found");
-        throw error
       }
       response.status(200).send(`Member deleted with ID: ${id}`)
     })

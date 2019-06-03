@@ -3,10 +3,12 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 ├── server
 │   ├── controllers
 │   │       └── apis
+│   │           ├── dataCollections.js
 │   │           ├── project.js
 │   │           └── user.js
 │   └── db
 │   │   ├── connection.js
+│   │   ├── dataCollectionQueries.js
 │   │   ├── memberQueries.js
 │   │   ├── projectQueries.js
 │   │   └── userQueries.js

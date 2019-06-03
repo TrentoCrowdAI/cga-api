@@ -36,10 +36,9 @@ const getMemberById = (request, response) => {
 
 const createMember = (request, response) => {
   var project_id = parseInt(request.params.id1);
-  var user_id = parseInt(request.params.id2);
-  const { status, create_at, role_id } = request.body;
+  const { user, status, create_at } = request.body;
 
-  pool.query('INSERT INTO member (project_id, user_id, status, create_at, role_id) VALUES ($1, $2, \'$3\', $4, $5)', [project_id, user_id, status, create_at, role_id ], (error, results) => {
+  pool.query('INSERT INTO member (project_id, user_id, status, create_at ) VALUES ($1, $2, \'$3\', $4)', [project_id, user.id, status, create_at], (error, results) => {
     if (error) {
       console.log(err);
       response.status(400).send("Bad Request");

@@ -6,8 +6,9 @@
 const connection = require('./connection');
 const pool = connection.pool;
 
-const getMembers = (req, res, next) => {
-  pool.query('SELECT * FROM member ORDER BY id ASC', (error, results) => {
+const getMembers = (request, response, next) => {
+  var project_id = parseInt(request.params.id);
+  pool.query('SELECT * FROM member WHERE project_id = ? ORDER BY id ASC', [project_id], (error, results) => {
     done();
     if (error) {
       console.log(err);
@@ -20,7 +21,7 @@ const getMembers = (req, res, next) => {
 const getMemberById = (request, response) => {
   var project_id = parseInt(request.params.id1);
   var user_id = parseInt(request.params.id2);
-  if(id != undefined){
+  if(project_id != undefined && user_id != undefined){
     pool.query('SELECT * FROM member WHERE project_id = $1 AND user_id = $2', [project_id, user_id], (error, results) => {
       if (error) {
         console.log(err);
@@ -43,25 +44,25 @@ const createMember = (request, response) => {
       console.log(err);
       response.status(400).send("Bad Request");
     }
-    response.status(201).send(`Member added with ID: ${result.insertId}`);
+    response.status(201).send("Member added with ID: ${result.insertId}");
   })
 }
 
 const updateMember = (request, response) => {
   var project_id = parseInt(request.params.id1);
   var user_id = parseInt(request.params.id2);
-  const { name, description, creation_date } = request.body;
+  const { name, created_at, role_id } = request.body;
 
-  if(id != undefined){
+  if(project_id != undefined && user_id != undefined){
     pool.query(
-      'UPDATE member SET status = \'$1,\' create_at = $2, role_id = $3 WHERE project_id = $4 AND user_id = $5',
-      [name, description, creation_date, id],
+      'UPDATE member SET status = \'$1,\' create_at = $2 WHERE project_id = $3 AND user_id = $4 AND role_id = $5',
+      [name, created_at, project_id, user_id, role_id],
       (error, results) => {
         if (error) {
           console.log(err);
           response.status(404).send("Member not found");
         }
-        response.status(200).send(`Member modified with ID: ${id}`);
+        response.status(200).send("Member modified with ID: ${id}");
       }
     )
   }else{
@@ -72,13 +73,13 @@ const updateMember = (request, response) => {
 const deleteMember = (request, response) => {
   var project_id = parseInt(request.params.id1);
   var user_id = parseInt(request.params.id2);
-  if(id != undefined){
+  if(project_id != undefined && user_id != undefined){
     pool.query('DELETE FROM member WHERE project_id = $1 AND user_id = $2', [project_id, user_id], (error, results) => {
       if (error) {
         console.log(err);
         response.status(404).send("Member not found");
       }
-      response.status(200).send(`Member deleted with ID: ${id}`)
+      response.status(200).send("Member deleted with ID: ${id}")
     })
   }else{
     response.status(400).send("Invalid id");

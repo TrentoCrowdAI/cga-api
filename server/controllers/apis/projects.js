@@ -3,19 +3,10 @@
  * @author Giovanni Guadagnini <giovanni.guadagnini@studenti.unitn.it>
  */
 
-const dbProject = require('./db/projectQueries');
-const dbMember = require('./db/memberQueries');
-//const {isLoggedIn} = require('./server');
-
-// Make sure that the request is sent by an authorized user
-const isLoggedIn = (req, res, next) => {
-  console.log(req.session);
-  if (req.session && req.session.user !== undefined) {
-    next();
-  } else {
-    res.status(400).json('User not authenticated');
-  }
-} 
+const dbProject = require('../../db/projectQueries');
+const dbMember = require('../../db/memberQueries');
+const dbRole = require('../../db/roleQueries');
+const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {
 
@@ -38,5 +29,14 @@ exports.init = function (app) {
   app.post('/projects/:id1/members/:id2', isLoggedIn, dbMember.updateMember);
 
   app.delete('/projects/:id1/members/:id2', isLoggedIn, dbMember.deleteMember);
-  
+
+  app.get('/projects/:id/roles', isLoggedIn, dbRole.getRoles);
+
+  app.post('/projects/:id1/roles/:id2', isLoggedIn, dbRole.createRole);
+
+  app.get('/projects/:id1/roles/:id2', isLoggedIn, dbRole.getRoleById);
+
+  app.post('/projects/:id1/roles/:id2', isLoggedIn, dbRole.updateRole);
+
+  app.delete('/projects/:id1/roles/:id2', isLoggedIn, dbRole.deleteRole);
 };

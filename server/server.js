@@ -20,16 +20,6 @@ const transformGoogleProfile = (profile) => {
     });
 }
 
-// Make sure that the request is sent by an authorized user
-const isLoggedIn = (req, res, next) => {
-  console.log(req.session);
-  if (req.session && req.session.user !== undefined) {
-    next();
-  } else {
-    res.status(400).json('User not authenticated');
-  }
-} 
-
 // Register Google Passport strategy 
 passport.use(new GoogleStrategy(google, 
     // Gets called when user authorizes access to their profile
@@ -66,8 +56,8 @@ app.get('/logout', function(req, res){
 });
 
 // Initialising the APIs
-var users = require("./users");
-var projects = require("./projects");
+var users = require("./controllers/apis/users.js");
+var projects = require("./controllers/apis/projects.js");
 users.init(app);
 projects.init(app);
 

@@ -39,7 +39,7 @@ const createUser = (request, response) => {
       console.log(err);
       response.status(400).send("Bad Request");
     }
-    response.status(201).send(`User added with ID: ${result.insertId}`);
+    response.status(201).send("User added with ID: ${result.insertId}");
   })
 }
 
@@ -56,7 +56,7 @@ const updateUser = (request, response) => {
           console.log(err);
           response.status(404).send("User not found");
         }
-        response.status(200).send(`User modified with ID: ${id}`);
+        response.status(200).send("User modified with ID: ${id}");
       }
     )
   }else{
@@ -65,19 +65,17 @@ const updateUser = (request, response) => {
 }
 
 const deleteUser = (request, response) => {
-  const deleteUser = (request, response) => {
-    const id = parseInt(request.params.id);
-    if(id != undefined){
-      pool.query('DELETE FROM "user" WHERE id = $1', [id], (error, results) => {
-        if (error) {
-          console.log(err);
-          response.status(404).send("User not found");
-        }
-        response.status(200).send(`User deleted with ID: ${id}`)
-      })
-    }else{
-      response.status(400).send("Invalid id");
-    }
+  const id = parseInt(request.params.id);
+  if(id != undefined){
+    pool.query('DELETE FROM "user" WHERE id = $1', [id], (error, results) => {
+      if (error) {
+        console.log(err);
+        response.status(404).send("User not found");
+      }
+      response.status(200).send("User deleted with ID: ${id}");
+    })
+  }else{
+    response.status(400).send("Invalid id");
   }
 }
 

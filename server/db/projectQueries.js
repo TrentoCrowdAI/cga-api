@@ -39,7 +39,7 @@ const createProject = (request, response) => {
       console.log(err);
       response.status(400).send("Bad Request");
     }
-    response.status(201).send(`Project added with ID: ${result.insertId}`);
+    response.status(201).send("Project added with ID: ${result.insertId}");
   })
 }
 
@@ -56,7 +56,7 @@ const updateProject = (request, response) => {
           console.log(err);
           response.status(404).send("Project not found");
         }
-        response.status(200).send(`Project modified with ID: ${id}`);
+        response.status(200).send("Project modified with ID: ${id}");
       }
     )
   }else{
@@ -72,7 +72,7 @@ const deleteProject = (request, response) => {
         console.log(err);
         response.status(404).send("Project not found");
       }
-      response.status(200).send(`Project deleted with ID: ${id}`)
+      response.status(200).send("Project deleted with ID: ${id}");
     })
   }else{
     response.status(400).send("Invalid id");

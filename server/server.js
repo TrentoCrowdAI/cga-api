@@ -47,7 +47,7 @@ app.get('/auth/google', passport.authenticate('google', {scope: ['profile'] }));
 app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/google'}),(req, res) => {
   console.log(req.user);
   req.session.user = req.user;
-  res.redirect(`OAuthLogin://login?user=${JSON.stringify(req.user)}`)
+  res.redirect("OAuthLogin://login?user=${JSON.stringify(req.user)}");
 });
 
 app.get('/logout', function(req, res){
@@ -55,11 +55,17 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
+app.get('/', function(req, res){
+  res.json("{hello world}");
+});
+
 // Initialising the APIs
 var users = require("./controllers/apis/users.js");
 var projects = require("./controllers/apis/projects.js");
+var dataCollections = require("./controllers/apis/dataCollection.js");
 users.init(app);
 projects.init(app);
+dataCollections.init(app);
 
 //Launch the server on port 3000
 const server = app.listen(3000, () => {

@@ -14,7 +14,7 @@ exports.init = function (app) {
 
   app.get('/users/:id', isLoggedIn, dbUser.getUserById);
 
-  app.post('/users/:id', isLoggedIn, dbUser.updateUser);
+  app.put('/users/:id', isLoggedIn, dbUser.updateUser);
 
   app.delete('/users/:id', isLoggedIn, dbUser.deleteUser);
 

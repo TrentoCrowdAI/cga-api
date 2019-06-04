@@ -63,9 +63,11 @@ app.get('/', function(req, res){
 var users = require("./controllers/apis/users.js");
 var projects = require("./controllers/apis/projects.js");
 var dataCollections = require("./controllers/apis/dataCollection.js");
+var surveys = require("./controllers/apis/surveys.js");  
 users.init(app);
 projects.init(app);
 dataCollections.init(app);
+surveys.init(app);
 
 //Launch the server on port 3000
 const server = app.listen(process.env.PORT || 3000 , () => {

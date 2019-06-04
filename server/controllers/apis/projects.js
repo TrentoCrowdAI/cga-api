@@ -17,7 +17,7 @@ exports.init = function (app) {
 
   app.get('/projects/:id', isLoggedIn, dbProject.getProjectById);
 
-  app.post('/projects/:id', isLoggedIn, dbProject.updateProject);
+  app.put('/projects/:id', isLoggedIn, dbProject.updateProject);
 
   app.delete('/projects/:id', isLoggedIn, dbProject.deleteProject);
 
@@ -31,7 +31,7 @@ exports.init = function (app) {
 
   app.get('/projects/:id1/members/:id2', isLoggedIn, dbMember.getMemberById);
 
-  app.post('/projects/:id1/members/:id2', isLoggedIn, dbMember.updateMember);
+  app.put('/projects/:id1/members/:id2', isLoggedIn, dbMember.updateMember);
 
   app.delete('/projects/:id1/members/:id2', isLoggedIn, dbMember.deleteMember);
 
@@ -41,7 +41,7 @@ exports.init = function (app) {
 
   app.get('/projects/:id1/roles/:id2', isLoggedIn, dbRole.getRoleById);
 
-  app.post('/projects/:id1/roles/:id2', isLoggedIn, dbRole.updateRole);
+  app.put('/projects/:id1/roles/:id2', isLoggedIn, dbRole.updateRole);
 
   app.delete('/projects/:id1/roles/:id2', isLoggedIn, dbRole.deleteRole);
 };

@@ -6,16 +6,20 @@
 const connection = require('./connection');
 const pool = connection.pool;
 
-const getDataCollections = (request, response, next) => {
+const getProjectDataCollections = (request, response, next) => {
   var project_id = parseInt(request.params.id);
-  pool.query('SELECT * FROM data_collection WHERE project_id = ? ORDER BY id ASC', [project_id], (error, results) => {
-    done();
-    if (error) {
-      console.log(err);
-      response.status(400).send("Bad Request");
-    }
-    response.status(200).json(results.rows);
-  })
+  if(project_id != undefined){
+    pool.query('SELECT * FROM data_collection WHERE project_id = ? ORDER BY id ASC', [project_id], (error, results) => {
+      done();
+      if (error) {
+        console.log(error);
+        response.status(400).send("Bad Request");
+      }
+      response.status(200).json(results.rows);
+    });
+  }else{
+    response.status(400).send("Invalid id");
+  }
 };
 
 const getDataCollectionById = (request, response) => {
@@ -25,7 +29,7 @@ const getDataCollectionById = (request, response) => {
   if(project_id != undefined && data_collection_id != undefined){
     pool.query('SELECT * FROM data_collection WHERE project_id = $1 AND id = $2', [project_id, data_collection_id], (error, results) => {
       if (error) {
-        console.log(err);
+        console.log(error);
         response.status(404).send("DataCollection not found");
       }
       response.status(200).json(results.rows)
@@ -36,12 +40,13 @@ const getDataCollectionById = (request, response) => {
 }
 
 const createDataCollection = (request, response) => {
-  var project_id = parseInt(request.params.id1);
-  const { name, description, type, start, end } = request.body;
+  var project_id = parseInt(request.params.id);
+  const { name, description, type, startDate, endDate } = request.body.dataCollection;
 
-  pool.query('INSERT INTO data_collection (name, description, type, start, "end", project_id) VALUES (\'$1\', \'$2\', \'$3\', $4, $5, $6)', [name, description, type, start, end, project_id], (error, results) => {
+  pool.query('INSERT INTO data_collection (name, description, type, start, "end", project_id) VALUES (\'$1\', \'$2\', \'$3\', $4, $5, $6)', 
+    [name, description, type, startDate, endDate, project_id], (error, results) => {
     if (error) {
-      console.log(err);
+      console.log(error);
       response.status(400).send("Bad Request");
     }
     response.status(201).send("DataCollection added with ID: ${result.insertId}");
@@ -51,15 +56,15 @@ const createDataCollection = (request, response) => {
 const updateDataCollection = (request, response) => {
   var project_id = parseInt(request.params.id1);
   var data_collection_id = parseInt(request.params.id2);
-  const { name, description, type, start, end } = request.body;
+  const { name, description, type, startDate, endDate } = request.body;
 
   if(project_id != undefined && data_collection_id != undefined){
     pool.query(
       'UPDATE data_collection SET name = $1, description = $2, type = $3, start = $4, "end" = $5, WHERE project_id = $6 AND id = $7',
-      [name, description, type, start, end, project_id, data_collection_id],
+      [name, description, type, startDate, endDate, project_id, data_collection_id],
       (error, results) => {
         if (error) {
-          console.log(err);
+          console.log(error);
           response.status(404).send("DataCollection not found");
         }
         response.status(200).send("DataCollection modified with ID: ${id}");
@@ -77,7 +82,7 @@ const deleteDataCollection = (request, response) => {
   if(project_id != undefined && data_collection_id != undefined){
     pool.query('DELETE FROM data_collection WHERE project_id = $1 AND id = $2', [project_id, data_collection_id], (error, results) => {
       if (error) {
-        console.log(err);
+        console.log(error);
         response.status(404).send("DataCollection not found");
       }
       response.status(200).send("DataCollection deleted with ID: ${id}")
@@ -94,7 +99,7 @@ const getDataCollectionById_dataCollection = (request, response) => {
   if(project_id != undefined && data_collection_id != undefined){
     pool.query('SELECT * FROM data_collection WHERE project_id = $1 AND id = $2', [project_id, data_collection_id], (error, results) => {
       if (error) {
-        console.log(err);
+        console.log(error);
         response.status(404).send("DataCollection not found");
       }
       response.status(200).json(results.rows)
@@ -114,7 +119,7 @@ const updateDataCollection_dataCollection = (request, response) => {
       [name, description, type, start, end, project_id, data_collection_id],
       (error, results) => {
         if (error) {
-          console.log(err);
+          console.log(error);
           response.status(404).send("DataCollection not found");
         }
         response.status(200).send("DataCollection modified with ID: ${id}");
@@ -132,7 +137,7 @@ const deleteDataCollection_dataCollection = (request, response) => {
   if(project_id != undefined && data_collection_id != undefined){
     pool.query('DELETE FROM data_collection WHERE project_id = $1 AND id = $2', [project_id, data_collection_id], (error, results) => {
       if (error) {
-        console.log(err);
+        console.log(error);
         response.status(404).send("DataCollection not found");
       }
       response.status(200).send("DataCollection deleted with ID: ${id}")
@@ -143,7 +148,7 @@ const deleteDataCollection_dataCollection = (request, response) => {
 }
 
 module.exports = {
-  getDataCollections,
+  getProjectDataCollections,
   getDataCollectionById,
   createDataCollection,
   updateDataCollection,

@@ -22,7 +22,6 @@ describe('GENERIC user test cases', () => {
   });
 });
 
-
 describe('Test the root path', () => {
   test('It should response the GET method', (done) => {
     request(app).get('/').then((response) => {

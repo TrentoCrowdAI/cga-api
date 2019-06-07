@@ -20,8 +20,9 @@ const getProjects = (request, response) => {
 }
 
 const getProjectById = (request, response) => {
-  var id = parseInt(request.params.id)
-  if(id != undefined){
+  var id = parseInt(request.params.id);
+
+  if(id != undefined && !isNaN(id)){
     pool.query('SELECT * FROM project WHERE id = $1', 
       [id], (error, results) => {
         if (error) {
@@ -40,15 +41,15 @@ const getProjectById = (request, response) => {
 }
 
 const createProject = (request, response) => {
-  const { name, description, creationDate } = request.body.project;
-  if(name != undefined && description != undefined && creationDate != undefined){
+  if(request.body.project != null && request.body.project.name != null && request.body.project.description != null && request.body.project.creation_date != null){
+    const { name, description, creation_date } = request.body.project;
     pool.query('INSERT INTO project (name, description, creation_date) VALUES ($1, $2, $3) RETURNING id', 
-      [name, description, creationDate ], (error, results) => {
+      [name, description, creation_date ], (error, results) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");
         }else if(results.rowCount != 0){
-          response.status(201).send("Project added with ID: " + results.rows[0].id);
+          response.status(201).send({"id": results.rows[0].id});
         }
       }
     );
@@ -59,24 +60,24 @@ const createProject = (request, response) => {
 
 const updateProject = (request, response) => {
   var project_id = parseInt(request.params.id);
-  const { name, description, creationDate } = request.body.project;
 
-  if(project_id != undefined){
-    if(name != undefined && description != undefined && creationDate != undefined){
-      pool.query('UPDATE project SET name = \'$1\', description = \'$2\', creation_date = $3 WHERE id = $5',
-        [name, description, creationDate, project_id], (error, results) => {
+  if(project_id != undefined && !isNaN(project_id)){
+    if(request.body.project != null && request.body.project.name != null && request.body.project.description != null && request.body.project.creation_date != null){
+      const { name, description, creation_date } = request.body.project;
+      pool.query('UPDATE project SET name = $1, description = $2, creation_date = $3 WHERE id = $4',
+        [name, description, creation_date, project_id], (error, results) => {
           if (error) {
             console.log(error);
             response.status(500).send("Internal Server Error");
           }else if(results.rowCount == 0){
             response.status(404).send("Project not found");
           }else{
-            response.status(200).json("Project modified with ID: " + project_id);
+            response.status(202).json({id: project_id});
           }
         }
       );
     }else{
-      response.status(400).send("Invalid data");
+      response.status(400).send("Bad Request");
     }
   }else{
     response.status(400).send("Invalid id");
@@ -85,7 +86,8 @@ const updateProject = (request, response) => {
 
 const deleteProject = (request, response) => {
   const project_id = parseInt(request.params.id);
-  if(project_id != null){
+  
+  if(project_id != undefined && !isNaN(project_id)){
     pool.query('DELETE FROM project WHERE id = $1', 
       [project_id], (error, results) => {
         if (error) {
@@ -94,7 +96,7 @@ const deleteProject = (request, response) => {
         }else if(results.rowCount == 0){
           response.status(404).send("Project not found");
         }else{
-          response.status(200).json("Project deleted with ID: " + project_id);
+          response.status(204).json("Project deleted with ID: " + project_id);
         }
       }
     );

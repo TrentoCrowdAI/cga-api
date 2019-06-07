@@ -62,13 +62,13 @@ const getRoleById = (request, response) => {
 const createRole = (request, response) => {
   const { name, description } = request.body.role;
 
-  pool.query('INSERT INTO role (name, description) VALUES (\'$1\', \'$2\')', 
+  pool.query('INSERT INTO role (name, description) VALUES (\'$1\', \'$2\') RETURNING id', 
     [name, description], (error, results) => {
       if (error) {
         console.log(error);
         response.status(500).send("Internal Server Error");
       }else if(results.rowCount != 0){ 
-        response.status(201).send("Role added with ID: " + id);
+        response.status(201).send("Role added with ID: " + results.rows[0].id);
       }
     }
   );
@@ -87,7 +87,7 @@ const updateRole = (request, response) => {
         }else if(results.rowCount == 0){ 
           response.status(404).send("Role not found");
         }else{
-          response.status(200).send("Role modified with ID: " + id);
+          response.status(200).send("Role modified with ID: " + role_id);
         }
       }
     );
@@ -108,7 +108,7 @@ const deleteRole = (request, response) => {
         }else if(results.rowCount == 0){
           response.status(404).send("Role not found");
         }else{
-          response.status(200).send("Role deleted with ID: " + id);
+          response.status(200).send("Role deleted with ID: " + role_id);
         }
       }
     );

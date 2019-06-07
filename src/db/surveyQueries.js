@@ -8,6 +8,7 @@ const pool = connection.pool;
 
 const getSurveys = (request, response) => {
   var dataCollectionId = request.body.dataCollectionId;
+  
   if(dataCollectionId != undefined){
     pool.query('SELECT * FROM survey WHERE data_collection_id = $1 ORDER BY id ASC', 
       [dataCollectionId], (error, results) => {
@@ -50,13 +51,13 @@ const createSurvey = (request, response) => {
   const { name, description, dataCollectionId } = request.body.dataCollection;
 
   if(dataCollectionId != undefined){
-    pool.query('INSERT INTO survey (name, description, data_collection_id) VALUES ($1, $2, $3)', 
+    pool.query('INSERT INTO survey (name, description, data_collection_id) VALUES ($1, $2, $3) RETURNING id', 
       [name, description, dataCollectionId], (error, results) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");
-        }else if(results != null){
-          response.status(201).send("Survey added with ID: " + id);
+        }else if(results.rowCount != 0){
+          response.status(201).send("Survey added with ID: " + results.rows[0].id);
         }
       }
     );
@@ -79,7 +80,7 @@ const updateSurvey = (request, response) => {
         }else if(results.rowCount == 0){
           response.status(404).send("Survey not found");
         }else{
-          response.status(200).send("Survey modified with ID: " + id);
+          response.status(200).send("Survey modified with ID: " + survey_id);
         }
       }
     );
@@ -100,7 +101,7 @@ const deleteSurvey = (request, response) => {
         }else if(results.rowCount == 0){
           response.status(404).send("Survey not found");
         }else{
-          response.status(200).send("Survey deleted with ID: " + id);
+          response.status(200).send("Survey deleted with ID: " + survey_id);
         }
       }
     );

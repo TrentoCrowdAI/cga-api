@@ -6,7 +6,6 @@
 const dbProject = require('../../db/projectQueries.js');
 const dbMember = require('../../db/memberQueries.js');
 const dbDataCollection = require('../../db/dataCollectionQueries.js');
-const dataCollectionRoleDB = require('../../db/collectionRoleQueries.js');
 const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {

@@ -5,6 +5,7 @@
  */
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 // Import Google OAuth apps config
@@ -38,6 +39,8 @@ passport.deserializeUser((user, done) => done(null,user));
 */
 // Inzialize http server
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 /*
 // Inzialize passport 
 app.use(passport.initialize());

@@ -22,7 +22,9 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 │   ├── config.js
 │   └── utilities.js
 │   └── test
+│       ├── memberQueries.test.js
 │       ├── projectQueries.test.js
+│       ├── roleQueries.test.js
 │       └── userQueries.test.js
 ├── package.json
 ├── Procfile

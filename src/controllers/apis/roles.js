@@ -8,9 +8,9 @@ const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {
 
-  app.get('roles/', isLoggedIn, dbRole.getRoles);
+  app.get('/roles', isLoggedIn, dbRole.getRoles);
 
-  app.post('roles/', isLoggedIn, dbRole.createRole);
+  app.post('/roles', isLoggedIn, dbRole.createRole);
 
   app.get('/roles/:id', isLoggedIn, dbRole.getRoleById);
 

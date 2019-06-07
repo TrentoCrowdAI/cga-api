@@ -1,5 +1,5 @@
 This repo contains the js code in order to manage the CGA web-app and react-native app.
-
+```
 ├── server
 │   ├── controllers
 │   │       └── apis
@@ -18,4 +18,6 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 ├── package.json
 ├── package-lock.json
 ├── Procfile
-└── README.md
+├── README.md
+└── server.js
+```

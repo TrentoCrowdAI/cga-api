@@ -7,7 +7,6 @@ const dbSubject = require('../../db/subjectQueries.js');
 const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {
-
   app.get('/subjects', isLoggedIn, dbSubject.getSubjects);
 
   app.post('/subjects', isLoggedIn, dbSubject.createSubject);

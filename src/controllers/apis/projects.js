@@ -20,9 +20,9 @@ exports.init = function (app) {
 
   app.delete('/projects/:id', isLoggedIn, dbProject.deleteProject);
 
-  app.post('project/:id/dataCollections', isLoggedIn, dbDataCollection.createDataCollection);
+  app.post('/projects/:id/dataCollections', isLoggedIn, dbDataCollection.createDataCollection);
 
-  app.get('project/:id/dataCollections', isLoggedIn, dbDataCollection.getProjectDataCollections)
+  app.get('/projects/:id/dataCollections', isLoggedIn, dbDataCollection.getProjectDataCollections)
 
   app.get('/projects/:id/members', isLoggedIn, dbMember.getMembers);
 

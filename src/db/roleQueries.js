@@ -64,7 +64,7 @@ const updateRole = (request, response) => {
   if(role_id != undefined && !isNaN(role_id)){
     if(request.body.role != null && request.body.role.name != null && request.body.role.description != null){
       const { name, description } = request.body.role;  
-      pool.query('UPDATE role SET name = $1, description = $2 WHERE id = $3',
+      pool.query('UPDATE role SET name = $1, description = $2 WHERE id = $3 RETURNING *',
         [name, description, role_id], (error, results) => {
           if (error) {
             console.log(error);
@@ -72,7 +72,7 @@ const updateRole = (request, response) => {
           }else if(results.rowCount == 0){ 
             response.status(404).send("Role not found");
           }else{
-            response.status(202).send({id: role_id});
+            response.status(202).send(results.rows);
           }
         }
       );

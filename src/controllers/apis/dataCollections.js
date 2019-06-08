@@ -9,11 +9,11 @@ const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {
 
-  app.get('/dataCollections/:id', isLoggedIn, dbDataCollection.getDataCollectionById_dataCollection);
+  app.get('/dataCollections/:id', isLoggedIn, dbDataCollection.getDataCollectionById);
 
-  app.put('/dataCollections/:id', isLoggedIn, dbDataCollection.updateDataCollection_dataCollection);
+  app.put('/dataCollections/:id', isLoggedIn, dbDataCollection.updateDataCollection);
 
-  app.delete('/dataCollections/:id', isLoggedIn, dbDataCollection.deleteDataCollection_dataCollection);
+  app.delete('/dataCollections/:id', isLoggedIn, dbDataCollection.deleteDataCollection);
 
   app.get('/dataCollections/:id/surveys', isLoggedIn, dbSurvey.getSurveys);
 

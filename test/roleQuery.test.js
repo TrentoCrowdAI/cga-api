@@ -84,6 +84,9 @@ describe('Role path test', () => {
   test('Test PUT method', (done) => {
     request(app).put('/roles/'+dummyRole.id).set('Accept', /json/).send({role: dummyRole}).then((response) => {
       expect(response.statusCode).toBe(202);
+      expect(response.body[0].id).toBe(dummyRole.id);
+      expect(response.body[0].name).toBe(dummyRole.name);
+      expect(response.body[0].description).toBe(dummyRole.description);
       done();
     });
   });

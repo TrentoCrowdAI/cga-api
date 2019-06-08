@@ -87,6 +87,10 @@ describe('Project path test', () => {
   test('Test PUT method', (done) => {
     request(app).put('/projects/'+dummyProject.id).set('Accept', /json/).send({project: dummyProject}).then((response) => {
       expect(response.statusCode).toBe(202);
+      expect(response.body[0].id).toBe(dummyProject.id);
+      expect(response.body[0].name).toBe(dummyProject.name);
+      expect(response.body[0].description).toBe(dummyProject.description);
+      expect(response.body[0].creation_date.substring(0,10)).toBe(dummyProject.creation_date.substring(0,10)); //problem with date
       done();
     });
   });

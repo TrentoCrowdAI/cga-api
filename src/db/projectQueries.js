@@ -64,7 +64,7 @@ const updateProject = (request, response) => {
   if(project_id != undefined && !isNaN(project_id)){
     if(request.body.project != null && request.body.project.name != null && request.body.project.description != null && request.body.project.creation_date != null){
       const { name, description, creation_date } = request.body.project;
-      pool.query('UPDATE project SET name = $1, description = $2, creation_date = $3 WHERE id = $4',
+      pool.query('UPDATE project SET name = $1, description = $2, creation_date = $3 WHERE id = $4 RETURNING *',
         [name, description, creation_date, project_id], (error, results) => {
           if (error) {
             console.log(error);
@@ -72,7 +72,7 @@ const updateProject = (request, response) => {
           }else if(results.rowCount == 0){
             response.status(404).send("Project not found");
           }else{
-            response.status(202).json({id: project_id});
+            response.status(202).json(results.rows);
           }
         }
       );
@@ -96,7 +96,7 @@ const deleteProject = (request, response) => {
         }else if(results.rowCount == 0){
           response.status(404).send("Project not found");
         }else{
-          response.status(204).json("Project deleted with ID: " + project_id);
+          response.status(204).json({id: project_id});
         }
       }
     );

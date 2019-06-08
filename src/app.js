@@ -70,7 +70,7 @@ app.get('/', function(req, res){
 var users = require("./controllers/apis/users.js");
 var projects = require("./controllers/apis/projects.js");
 var roles = require("./controllers/apis/roles.js");
-var dataCollections = require("./controllers/apis/dataCollection.js");
+var dataCollections = require("./controllers/apis/dataCollections.js");
 var surveys = require("./controllers/apis/surveys.js");  
 users.init(app);
 projects.init(app);

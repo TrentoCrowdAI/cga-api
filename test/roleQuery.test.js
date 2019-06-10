@@ -4,11 +4,13 @@ const connection = require('../src/db/connection.js');
 const pool = connection.pool;
 
 let dummyRole = {
+  id: 100,
   name: 'ADMIN',
   description: 'admin role',
 };
 
 let dummyIncompleteRole = {
+  id: 1,
   name: 'ADMIN',
 };
 

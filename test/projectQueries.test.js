@@ -3,6 +3,18 @@ const app = require('../src/app.js');
 const connection = require('../src/db/connection.js');
 const pool = connection.pool;
 
+let dummyRole = {
+  id: 1,
+  name: 'ADMIN',
+  description: 'admin role',
+};
+
+let dummyUser = {
+  id: '1231231231231234',
+  name: 'John',
+  surname: 'Doe',
+};
+
 let dummyProject = {
   name: 'test',
   description: 'cga test',
@@ -17,7 +29,14 @@ let dummyIncompleteProject = {
 let invalid_id = 111111;
 let string_id = "AAAA";
 
+beforeAll(async (done) => {
+  //await request(app).post('/roles').set('Accept', /json/).send({role: dummyRole});
+  //await request(app).post('/users').set('Accept', /json/).send({user: dummyUser});
+  done();
+});
+
 afterAll(() => {
+  //await request(app).delete('/roles/'+dummyRole.id);
   pool.end();
 });
 

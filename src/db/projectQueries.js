@@ -41,8 +41,9 @@ const getProjectById = (request, response) => {
 }
 
 const createProject = (request, response) => {
-  if(request.body.project != null && request.body.project.name != null && request.body.project.description != null && request.body.project.creation_date != null){
-    const { name, description, creation_date } = request.body.project;
+  if(request.body.project != null && request.body.project.name != null && request.body.project.description != null && request.body.project.creation_date != null ){
+    const { name, description, creation_date } = request.body.project; 
+    //const user_id = req.session.user.id;
     pool.query('INSERT INTO project (name, description, creation_date) VALUES ($1, $2, $3) RETURNING id', 
       [name, description, creation_date ], (error, results) => {
         if (error) {

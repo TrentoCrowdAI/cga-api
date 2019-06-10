@@ -5,6 +5,7 @@
 
 const dbSurvey = require('../../db/surveyQueries.js');
 const dbSurveyResponse = require('../../db/surveyResponseQueries.js');
+const dbMember = require('../../db/memberQueries.js');
 const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {

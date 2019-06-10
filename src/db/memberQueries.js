@@ -6,10 +6,10 @@
 const connection = require('./connection');
 const pool = connection.pool;
 
-const getMembers = (request, response, next) => {
+const getProjectMembers = (request, response) => {
   var project_id = parseInt(request.params.id);
   if(project_id != undefined){
-    pool.query('SELECT * FROM member WHERE project_id = $1 ORDER BY id ASC', 
+    pool.query('SELECT * FROM member WHERE project_id = $1', 
       [project_id], (error, results) => {
         if (error) {
           console.log(error);
@@ -27,8 +27,9 @@ const getMembers = (request, response, next) => {
 const getMemberById = (request, response) => {
   var project_id = parseInt(request.params.id1);
   var user_id = parseInt(request.params.id2);
+  var isNumber =  /^\d+$/.test(user_id);
 
-  if(project_id != undefined && user_id != undefined && !isNaN(project_id) && !isNaN(user_id)){
+  if(project_id != undefined && !isNaN(project_id) && user_id != undefined && isNumber){
     pool.query('SELECT * FROM member WHERE project_id = $1 AND user_id = $2', 
       [project_id, user_id], (error, results) => {
         if (error) {
@@ -42,23 +43,23 @@ const getMemberById = (request, response) => {
       }
     );
   }else{
-    response.status(400).send("Invalid ids");
+    response.status(400).send("Invalid Ids");
   }
 }
 
-const createMember = (request, response) => {
+const addMember = (request, response) => {
   var project_id = parseInt(request.params.id);
 
   if(project_id != undefined && !isNaN(project_id)){
-    if(request.body.member != null && request.body.member.user != null && request.body.member.status != null && request.body.member.create_at != null){
-      const { user, status, create_at } = request.body.member;
-      pool.query('INSERT INTO member (project_id, user_id, status, create_at ) VALUES ($1, $2, $3, $4)', 
-        [project_id, user.id, status, create_at], (error, results) => {
+    if(request.body.member != null && request.body.member.user_id != null && request.body.member.status != null && request.body.member.role_id != null){
+      const { user_id, status, role_id } = request.body.member;
+      pool.query('INSERT INTO member (project_id, user_id, status, creation_date, role_id ) VALUES ($1, $2, $3, NOW(), $4) RETURNING *', 
+        [project_id, user_id, status, role_id], (error, results) => {
           if (error) {
             console.log(error);
             response.status(500).send("Internal Server Error");
           }else if(results.rowCount != 0){
-            response.status(201).send({id: user.id});
+            response.status(201).send(results.row);
           }
         }
       );
@@ -73,21 +74,20 @@ const createMember = (request, response) => {
 const updateMember = (request, response) => {
   var project_id = parseInt(request.params.id1);
   var user_id = parseInt(request.params.id2);
-  
-
-  if(project_id != undefined && user_id != undefined && !isNaN(project_id) && !isNaN(user_id)){
-    if(request.body.member != null && request.body.member.user != null && request.body.member.status != null && request.body.member.create_at != null){
-      const { name, created_at, role_id } = request.body.member;
-      pool.query('UPDATE member SET status = $1, create_at = $2 WHERE project_id = $3 AND user_id = $4 AND role_id = $5',
-        [name, created_at, project_id, user_id, role_id],
+  var isNumber =  /^\d+$/.test(user_id);
+  if(project_id != undefined && !isNaN(project_id) && user_id != undefined && isNumber){
+    if(request.body.member != null && request.body.member.user_id != null && request.body.member.status != null && request.body.member.creation_date != null && request.body.member.role_id != null){
+      const { status, creation_date, role_id } = request.body.member;
+      pool.query('UPDATE member SET status = $1, creation_date = $2 WHERE project_id = $3 AND user_id = $4 AND role_id = $5 RETURNING *',
+        [status, creation_date, project_id, user_id, role_id],
         (error, results) => {
           if (error) {
             console.log(error);
             response.status(500).send("Internal Server Error");
-          }else if(results.rowCount != 0){
+          }else if(results.rowCount == 0){
             response.status(404).send("Member not found");
           }else{
-            response.status(202).send({id: user_id});
+            response.status(202).send(results.rows);
           }
         }
       );
@@ -95,21 +95,22 @@ const updateMember = (request, response) => {
       response.status(400).send("Bad Request");
     }
   }else{
-    response.status(400).send("Invalid ids");
+    response.status(400).send("Invalid id");
   }
 }
 
 const deleteMember = (request, response) => {
   var project_id = parseInt(request.params.id1);
   var user_id = parseInt(request.params.id2);
-  
-  if(project_id != undefined && user_id != undefined && !isNaN(project_id) && !isNaN(user_id)){
+  var isNumber =  /^\d+$/.test(user_id);
+
+  if(project_id != undefined && !isNaN(project_id) && user_id != undefined && isNumber){
     pool.query('DELETE FROM member WHERE project_id = $1 AND user_id = $2', 
       [project_id, user_id], (error, results) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");
-        }else if(results.rowCount != 0){
+        }else if(results.rowCount == 0){
           response.status(404).send("Member not found");
         }else{
           response.status(204).send({id: user_id});
@@ -117,14 +118,14 @@ const deleteMember = (request, response) => {
       }
     );
   }else{
-    response.status(400).send("Invalid ids");
+    response.status(400).send("Invalid Id");
   }
 }
 
 module.exports = {
-  getMembers,
+  getProjectMembers,
   getMemberById,
-  createMember,
+  addMember,
   updateMember,
   deleteMember,
 };

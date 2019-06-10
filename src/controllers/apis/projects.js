@@ -24,7 +24,14 @@ exports.init = function (app) {
 
   app.get('/projects/:id/dataCollections', isLoggedIn, dbDataCollection.getProjectDataCollections)
 
-  app.get('/projects/:id/members', isLoggedIn, dbMember.getMembers);
+  app.get('/projects/:id/members', isLoggedIn, dbMember.getProjectMembers);
 
-  app.post('/projects/:id/members', isLoggedIn, dbMember.createMember);
+  app.post('/projects/:id/members', isLoggedIn, dbMember.addMember);
+
+  app.get('/projects/:id1/members/:id2', isLoggedIn, dbMember.getMemberById); 
+
+  app.put('/projects/:id1/members/:id2', isLoggedIn, dbMember.updateMember);
+
+  app.delete('/projects/:id1/members/:id2', isLoggedIn, dbMember.deleteMember);
+
 };

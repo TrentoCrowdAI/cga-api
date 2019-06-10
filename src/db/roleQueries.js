@@ -41,10 +41,10 @@ const getRoleById = (request, response) => {
 }
 
 const createRole = (request, response) => {
-  if(request.body.role != null && request.body.role.name != null && request.body.role.description != null){
-    const { name, description } = request.body.role;
-    pool.query('INSERT INTO role (name, description) VALUES ($1, $2) RETURNING id', 
-      [name, description], (error, results) => {
+  if(request.body.role != null && request.body.role.id != null && request.body.role.name != null && request.body.role.description != null){
+    const { id, name, description } = request.body.role;
+    pool.query('INSERT INTO role (id, name, description) VALUES ($1, $2, $3) RETURNING id', 
+      [id, name, description], (error, results) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");

@@ -3,8 +3,14 @@ const app = require('../src/app.js');
 const connection = require('../src/db/connection.js');
 const pool = connection.pool;
 
-let dummyRole = {
+let adminRole = {
   id: 1,
+  name: 'ADMIN',
+  description: 'admin role',
+};
+
+let dummyRole = {
+  id: 200,
   name: 'ADMIN',
   description: 'admin role',
 };
@@ -13,45 +19,57 @@ let dummyUser = {
   id: '1231231231231234',
   name: 'John',
   surname: 'Doe',
+}
+
+let adminUser = {
+  id: '123123123123123',
+  name: 'John',
+  surname: 'Doe',
 };
 
 let dummyProject = {
   name: 'test',
   description: 'cga test',
   creation_date: '2019-01-01T01:00:00.000Z',
-  user_id: dummyUser.id
+  user_id: adminUser.id
 };
-
 
 let dummyMember = {
   role_id: dummyRole.id,
   user_id: dummyUser.id,
-  status: 'ACTIVE'
+  status: 'active'
 };
 
 let dummyIncompleteMember = {
-  status: 'ACTIVE'
+  status: 'active'
 };
 
 let invalid_id = 111111;
 let string_id = "AAAA";
 
 beforeAll(async (done) => {
-  await request(app).post('/roles').set('Accept', /json/).send({role: dummyRole}).then(async (response) => {//creation of the role
-    await request(app).post('/users').set('Accept', /json/).send({user: dummyUser}).then(async (response) => {//creation of the user
+  await request(app).post('/roles').set('Accept', /json/).send({role: adminRole}).then(async (response) => {//creation of the role
+    await request(app).post('/users').set('Accept', /json/).send({user: adminUser}).then(async (response) => {//creation of the user
       await request(app).post('/projects').set('Accept', /json/).send({project: dummyProject}).then(async (response) => {//creation of the project
         dummyProject.id = response.body.id;
         dummyMember.project_id = response.body.id;
+        await request(app).post('/users').set('Accept', /json/).send({user: dummyUser}).then(async () => {
+          await request(app).post('/roles').set('Accept', /json/).send({role: dummyRole});
+        });
       });
     });
   });
+  
   done();
 });
 
 afterAll(async () => {
-  await request(app).delete('/projects/'+dummyProject.id).then(async (response) => {
-    await request(app).delete('/users/' + dummyUser.id).then(async (response) => {
-      await request(app).delete('/roles/'+dummyRole.id).then(async (response) => {
+  await request(app).delete('/projects/' + dummyProject.id).then(async (response) => {
+    await request(app).delete('/users/' + adminUser.id).then(async (response) => {
+      await request(app).delete('/roles/' + adminRole.id).then(async (response) => {
+        await request(app).delete('/roles/' +dummyRole.id).then(async() => {
+          await request(app).delete('/users/' + dummyUser.id);
+        });
       });
     });
   });

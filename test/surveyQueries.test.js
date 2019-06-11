@@ -6,10 +6,24 @@ const pool = connection.pool;
 let invalid_id = 1111;
 let string_id = "asdasd";
 
+
+let adminRole = {
+  id: 1,
+  name: 'ADMIN',
+  description: 'admin role',
+};
+
+let adminUser = {
+  id: '123123123123123',
+  name: 'John',
+  surname: 'Doe',
+};
+
 let dummyProject = {
   name: 'test',
   description: 'cga test',
-  creation_date: '2019-01-01T02:00:00.000Z'
+  creation_date: '2019-01-01T01:00:00.000Z',
+  user_id: adminUser.id
 };
 
 let dummyDataCollection = {
@@ -29,24 +43,30 @@ let dummyIncompleteSurvey = {
   name: "test survey",
 };
 
-beforeAll(async (done) => {
-  await request(app).post('/projects').set('Accept', /json/).send({project: dummyProject}).then(async (response) => {
-    dummyProject.id = response.body.id;
-    dummyDataCollection.project_id = response.body.id;
-    await request(app).post('/projects/' + dummyProject.id + "/dataCollections").set('Accept', /json/).send({data_collection: dummyDataCollection}).then((response) => {
-      dummyDataCollection.id = response.body.id;
-      dummySurvey.data_collection_id = response.body.id;
+beforeAll(async () => {
+  await request(app).post('/roles').set('Accept', /json/).send({role: adminRole}).then(async (response) => {//creation of the role
+    await request(app).post('/users').set('Accept', /json/).send({user: adminUser}).then(async (response) => {//creation of the user
+      await request(app).post('/projects').set('Accept', /json/).send({project: dummyProject}).then(async (response) => {//creation of the project
+        dummyProject.id = response.body.id;
+        dummyDataCollection.project_id = response.body.id;
+        await request(app).post('/projects/' + dummyProject.id + "/dataCollections").set('Accept', /json/).send({data_collection: dummyDataCollection}).then((response) => {
+          dummyDataCollection.id = response.body.id;
+          dummySurvey.data_collection_id = response.body.id;
+        });
+      });
     });
   });
-  done();
 });
 
-afterAll(async (done) => {
+afterAll(async () => {
   await request(app).delete('/dataCollections/' + dummyDataCollection.id).set('Accept', /json/).send({data_collection: dummyDataCollection}).then(async (response) => {
-    await request(app).delete('/projects/'+dummyProject.id);
+    await request(app).delete('/projects/'+dummyProject.id).then(async (response) => {
+      await request(app).delete('/users/' + adminUser.id).then(async (response) => {
+        await request(app).delete('/roles/'+adminRole.id);
+      });
+    });
   });
   pool.end();
-  done();
 });
 
 describe('GENERIC user test cases', () => {

@@ -10,7 +10,7 @@ let dummyRole = {
 };
 
 let dummyUser = {
-  id: '1231231231231234',
+  id: '123123123123123',
   name: 'John',
   surname: 'Doe',
 };
@@ -30,13 +30,14 @@ let invalid_id = 111111;
 let string_id = "AAAA";
 
 beforeAll(async (done) => {
-  //await request(app).post('/roles').set('Accept', /json/).send({role: dummyRole});
-  //await request(app).post('/users').set('Accept', /json/).send({user: dummyUser});
+  await request(app).post('/roles').set('Accept', /json/).send({role: dummyRole});
+  await request(app).post('/users').set('Accept', /json/).send({user: dummyUser});
   done();
 });
 
-afterAll(() => {
-  //await request(app).delete('/roles/'+dummyRole.id);
+afterAll(async () => {
+  await request(app).delete('/roles/'+dummyRole.id);
+  await request(app).delete('/users/'+dummyUser.id);
   pool.end();
 });
 

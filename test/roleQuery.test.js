@@ -17,6 +17,10 @@ let dummyIncompleteRole = {
 let invalid_id = 111111;
 let string_id = "AAAA";
 
+beforeAll(()=>{
+  process.env.NODE_ENV = 'test';
+});
+
 afterAll(() => {
   pool.end();
 });

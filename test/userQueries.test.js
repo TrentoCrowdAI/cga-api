@@ -17,6 +17,10 @@ let dummyIncompleteUser = {
   name: 'John',
 };
 
+beforeAll(() => {
+  process.env.NODE_ENV = 'test';
+});
+
 afterAll(() => {
   pool.end();
 });
@@ -43,22 +47,10 @@ describe('Test /users method root path', () => {
       done();
     });
   });
-  test('Test POST method', (done) => {
+  test('Test POST method', (done) => {//N.B. the post will always have session values given that google will provide that
     request(app).post('/users').set('Accept', /json/).send({user: dummyUser}).then((response) => {
       expect(response.statusCode).toBe(201);
       expect(response.body.id).toBe(dummyUser.id);
-      done();
-    });
-  });
-  test('Test POST method without data', (done) => {
-    request(app).post('/users').set('Accept', /json/).send({}).then((response) => {
-      expect(response.statusCode).toBe(400);
-      done();
-    });
-  });
-  test('Test POST method without incomplete data', (done) => {
-    request(app).post('/users').set('Accept', /json/).send({dummyIncompleteUser}).then((response) => {
-      expect(response.statusCode).toBe(400);
       done();
     });
   });

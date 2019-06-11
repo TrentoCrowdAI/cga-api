@@ -22,7 +22,7 @@ const transformGoogleProfile = (profile) => {
         id: profile.sub ? profile.sub : null,
     });
 }
-
+/*
 // Register Google Passport strategy 
 passport.use(new GoogleStrategy(google, 
     // Gets called when user authorizes access to their profile
@@ -36,7 +36,7 @@ passport.serializeUser((user, done) => done(null, user));
 
 // Desrialize user from the sessions
 passport.deserializeUser((user, done) => done(null,user));
-
+*/
 // Inzialize http server
 const app = express();
 app.use(bodyParser.json());

@@ -1,6 +1,10 @@
 const isLoggedIn = (req, res, next) => {
-  //next(); //uncomment for test
-  console.log(req.session);
+  if(process.env.NODE_ENV === 'test'){
+    req.session = req.session || {};
+    req.session.user =  {id: '123123123123123',name: 'John',surname: 'Doe',};
+  }else{
+    console.log(req.session);
+  }
   if (req.session && req.session.user !== undefined) {
     next();
   } else {
@@ -9,8 +13,12 @@ const isLoggedIn = (req, res, next) => {
 } 
 
 const isLoggedIn2 = (req, res, next) => {
-  //next(); //uncomment for test
-  console.log(req.session);
+  if(process.env.NODE_ENV === 'test'){
+    req.session = req.session || {};
+    req.session.user = {id: '123123123123123',name: 'John',surname: 'Doe',};
+  }else{
+    console.log(req.session);
+  }
   if (req.session && req.session.user !== undefined) {
     next();
   } else {

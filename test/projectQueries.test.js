@@ -30,6 +30,7 @@ let invalid_id = 111111;
 let string_id = "AAAA";
 
 beforeAll(async (done) => {
+  process.env.NODE_ENV = 'test';
   await request(app).post('/roles').set('Accept', /json/).send({role: dummyRole});
   await request(app).post('/users').set('Accept', /json/).send({user: dummyUser});
   done();

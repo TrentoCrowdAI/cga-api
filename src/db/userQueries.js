@@ -7,10 +7,10 @@ const connection = require('./connection');
 const pool = connection.pool;
 
 const createUser = (request, response) => {
-  //if(request.session.user == null && request.session.user.name != null && request.session.user.surname != null){
-  if(request.body.user != null && request.body.user.name != null && request.body.user.surname != null){//for test
-    //const { id, name, surname } = request.session.user;
-    const { id, name, surname } = request.body.user;//for test
+  if(request.session.user == null && request.session.user.name != null && request.session.user.surname != null){ //comment for test
+  //if(request.body.user != null && request.body.user.name != null && request.body.user.surname != null){//uncomment for test
+    const { id, name, surname } = request.session.user; // comment for test
+    //const { id, name, surname } = request.body.user;//uncomment for test
     pool.query('SELECT * FROM "user" WHERE id = $1', 
       [id], (error, results) => {
         if (error) {
@@ -24,7 +24,8 @@ const createUser = (request, response) => {
                 console.log(error);
                 response.status(500).send("Internal Server Error");
               }else{
-                response.status(201).json({"id": id});
+                //response.status(201).json({"id": id});//Uncomment for test
+                res.redirect("OAuthLogin://login?user=${JSON.stringify(req.session.user)}");//comment for test
               }
             }
           );

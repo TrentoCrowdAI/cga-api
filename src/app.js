@@ -22,7 +22,7 @@ const transformGoogleProfile = (profile) => {
         id: profile.sub ? profile.sub : null,
     });
 }
-/*
+
 // Register Google Passport strategy 
 passport.use(new GoogleStrategy(google, 
     // Gets called when user authorizes access to their profile
@@ -36,12 +36,12 @@ passport.serializeUser((user, done) => done(null, user));
 
 // Desrialize user from the sessions
 passport.deserializeUser((user, done) => done(null,user));
-*/
+
 // Inzialize http server
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-/*
+
 // Inzialize passport 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -53,14 +53,12 @@ app.get('/auth/google/callback', passport.authenticate('google', {failureRedirec
   console.log(req.user);
   req.session.user = req.user;
   dbUser.createUser(req, res);
-  //res.redirect("OAuthLogin://login?user=${JSON.stringify(req.user)}");
 });
 
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
-*/
 
 app.get('/', function(req, res){
   res.json("Hello world");

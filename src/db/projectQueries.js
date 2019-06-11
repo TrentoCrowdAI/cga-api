@@ -43,7 +43,7 @@ const getProjectById = (request, response) => {
 const createProject = (request, response) => {
   if(request.body.project != null && request.body.project.name != null && request.body.project.description != null && request.body.project.creation_date != null ){
     const { name, description, creation_date } = request.body.project; 
-    //const user_id = req.session.user.id;
+    const user_id = req.session.user.id; //comment for test
     pool.query('INSERT INTO project (name, description, creation_date) VALUES ($1, $2, $3) RETURNING id', 
       [name, description, creation_date ], (error, results) => {
         if (error) {
@@ -51,7 +51,8 @@ const createProject = (request, response) => {
           response.status(500).send("Internal Server Error");
         }else if(results.rowCount != 0){
           pool.query('INSERT INTO member (project_id, user_id, status, creation_date, role_id ) VALUES ($1, $2, $3, NOW(), $4) RETURNING *', 
-            [results.rows[0].id, '123123123123123', 'active', 1], (error, results2) => { //session.user.id
+            //[results.rows[0].id, '123123123123123', 'active', 1], (error, results2) => { //uncomment for test
+            [results.rows[0].id, session.user.id, 'active', 1], (error, results2) => {  //comment for test
               if (error) {
                 console.log(error);
                 response.status(500).send("Internal Server Error");

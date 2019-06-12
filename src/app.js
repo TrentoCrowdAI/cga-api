@@ -22,21 +22,31 @@ const transformGoogleProfile = (profile) => {
         id: profile.sub ? profile.sub : null,
     });
 }
-/*
+
 // Register Google Passport strategy 
 passport.use(new GoogleStrategy(google, 
     // Gets called when user authorizes access to their profile
-    async(accessToken, refreshToken, profile, done)
+    function (accessToken, refreshToken, profile, done){
         // Return done callback and pass transformed user object
-        => done(null, transformGoogleProfile(profile._json))
+        return done(null, transformGoogleProfile(profile._json));
+    }
 ));
+
+/*
+// Register Google Passport strategy 
+passport.use(new GoogleStrategy(google, 
+  // Gets called when user authorizes access to their profile
+  async (accessToken, refreshToken, profile, done) =>
+      // Return done callback and pass transformed user object
+      done(null, transformGoogleProfile(profile._json))
+));*/
 
 // Serialize user into the sessions
 passport.serializeUser((user, done) => done(null, user));
 
 // Desrialize user from the sessions
 passport.deserializeUser((user, done) => done(null,user));
-*/
+
 // Inzialize http server
 const app = express();
 app.use(bodyParser.json());

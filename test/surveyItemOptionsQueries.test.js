@@ -12,8 +12,8 @@ const dummyDataCollection = require('./dummies.js').dummyDataCollection;
 const dummySurvey = require('./dummies.js').dummySurvey;
 const dummySurveyComponent = require('./dummies.js').dummySurveyComponent;
 const dummySurveyItem = require('./dummies.js').dummySurveyItem;
-const dummySurveyItemLabel = require('./dummies.js').dummySurveyItemLabel;
-const dummyIncompleteSurveyItemLabel = require('./dummies.js').dummyIncompleteSurveyItemLabel;
+const dummySurveyItemOption = require('./dummies.js').dummySurveyItemOption;
+const dummyIncompleteSurveyItemOption = require('./dummies.js').dummyIncompleteSurveyItemOption;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
@@ -33,7 +33,7 @@ beforeAll(async () => {
               dummySurveyItem.survey_component_id = response.body.id;
               await request(app).post('/surveyComponents/' + dummySurveyComponent.id + "/surveyItems").set('Accept', /json/).send({survey_item: dummySurveyItem}).then((response) => {
                 dummySurveyItem.id = response.body.id;
-                dummySurveyItemLabel.survey_item_id = response.body.id;
+                dummySurveyItemOption.survey_item_id = response.body.id;
               });
             });
           });
@@ -75,110 +75,112 @@ describe('Test the root path', () => {
   });
 });
 
-describe('Test /surveyItems/:id/surveyItems method root path', () => {
+describe('Test /surveyItems/:id/labels method root path', () => {
   test('Test GET method', (done) => {
-    request(app).get('/surveyItems/' + dummySurveyItem.id + "/labels").then((response) => {
+    request(app).get('/surveyItems/' + dummySurveyItem.id + "/options").then((response) => {
       expect(response.statusCode).toBe(200);
       done();
     });
   });
   test('Test POST method', (done) => {
-    request(app).post('/surveyItems/' + dummySurveyItem.id + "/labels").set('Accept', /json/).send({label_survey_item: dummySurveyItemLabel}).then((response) => {
+    request(app).post('/surveyItems/' + dummySurveyItem.id + "/options").set('Accept', /json/).send({survey_item_option: dummySurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(201);
-      dummySurveyItemLabel.id = response.body.id;
+      dummySurveyItemOption.id = response.body.id;
       done();
     });
   });
   test('Test POST method without data', (done) => {
-    request(app).post('/surveyItems/' + dummySurveyItem.id + "/labels").set('Accept', /json/).send({}).then((response) => {
+    request(app).post('/surveyItems/' + dummySurveyItem.id + "/options").set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/surveyItems/' + dummySurveyItem.id + "/labels").set('Accept', /json/).send({label_survey_item: dummyIncompleteSurveyItemLabel}).then((response) => {
+    request(app).post('/surveyItems/' + dummySurveyItem.id + "/options").set('Accept', /json/).send({survey_item_option: dummyIncompleteSurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
 });
-describe('Test /surveyItemLabels method root path', () => {
+describe('Test /surveyItemOptions method root path', () => {
   test('Test GET method with valid id', (done) => {
-    request(app).get('/labels/' + dummySurveyItemLabel.id).set('Accept', /json/).send({label_survey_item: dummySurveyItemLabel}).then((response) => {
+    request(app).get('/options/' + dummySurveyItemOption.id).set('Accept', /json/).send({survey_item_option: dummySurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(200);
-      expect(response.body[0].id).toBe(dummySurveyItemLabel.id);
-      expect(response.body[0].language).toBe(dummySurveyItemLabel.language);
-      expect(response.body[0].content).toBe(dummySurveyItemLabel.content);
-      expect(response.body[0].survey_item_id).toBe(dummySurveyItemLabel.survey_item_id);
+      expect(response.body[0].id).toBe(dummySurveyItemOption.id);
+      expect(response.body[0].value).toBe(dummySurveyItemOption.value);
+      expect(response.body[0].type).toBe(dummySurveyItemOption.type);
+      expect(response.body[0].name).toBe(dummySurveyItemOption.name);
+      expect(response.body[0].survey_item_id).toBe(dummySurveyItemOption.survey_item_id);
       done();
     });
   });
   test('Test GET method with invalid id', (done) => {
-    request(app).get('/labels/' + invalid_id).set('Accept', /json/).send({label_survey_item: dummySurveyItemLabel}).then((response) => {
+    request(app).get('/options/' + invalid_id).set('Accept', /json/).send({survey_item_option: dummySurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(404);
       done();
     });
   });
   test('Test GET method with string id', (done) => {
-    request(app).get('/labels/' + string_id).then((response) => {
+    request(app).get('/options/' + string_id).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT', (done) => {
-    request(app).put('/labels/' + dummySurveyItemLabel.id).set('Accept', /json/).send({label_survey_item: dummySurveyItemLabel}).then((response) => {
+    request(app).put('/options/' + dummySurveyItemOption.id).set('Accept', /json/).send({survey_item_option: dummySurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(202);
-      expect(response.body[0].id).toBe(dummySurveyItemLabel.id);
-      expect(response.body[0].language).toBe(dummySurveyItemLabel.language);
-      expect(response.body[0].content).toBe(dummySurveyItemLabel.content);
-      expect(response.body[0].survey_item_id).toBe(dummySurveyItemLabel.survey_item_id);
+      expect(response.body[0].id).toBe(dummySurveyItemOption.id);
+      expect(response.body[0].value).toBe(dummySurveyItemOption.value);
+      expect(response.body[0].type).toBe(dummySurveyItemOption.type);
+      expect(response.body[0].name).toBe(dummySurveyItemOption.name);
+      expect(response.body[0].survey_item_id).toBe(dummySurveyItemOption.survey_item_id);
       done();
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/labels/' + dummySurveyItemLabel.id).set('Accept', /json/).send({label_survey_item: dummyIncompleteSurveyItemLabel}).then((response) => {
+    request(app).put('/options/' + dummySurveyItemOption.id).set('Accept', /json/).send({survey_item_option: dummyIncompleteSurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/labels/' + invalid_id).set('Accept', /json/).send({label_survey_item: dummyIncompleteSurveyItemLabel}).then((response) => {
+    request(app).put('/options/' + invalid_id).set('Accept', /json/).send({survey_item_option: dummyIncompleteSurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/labels/' + string_id).set('Accept', /json/).send({label_survey_item: dummyIncompleteSurveyItemLabel}).then((response) => {
+    request(app).put('/options/' + string_id).set('Accept', /json/).send({survey_item_option: dummyIncompleteSurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and empty user', (done) => {
-    request(app).put('/labels/' + invalid_id).set('Accept', /json/).send({}).then((response) => {
+    request(app).put('/options/' + invalid_id).set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and empty user', (done) => {
-    request(app).put('/labels/' + string_id).set('Accept', /json/).send({}).then((response) => {
+    request(app).put('/options/' + string_id).set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test DELETE', (done) => {
-    request(app).delete('/labels/' + dummySurveyItemLabel.id).then((response) => {
+    request(app).delete('/options/' + dummySurveyItemOption.id).then((response) => {
       expect(response.statusCode).toBe(204);
       done();
     });
   });
   test('Test DELETE with invalid id', (done) => {
-    request(app).delete('/labels/' + invalid_id).then((response) => {
+    request(app).delete('/options/' + invalid_id).then((response) => {
       expect(response.statusCode).toBe(404);
       done();
     });
   });
   test('Test DELETE with string id', (done) => {
-    request(app).delete('/labels/' + string_id).then((response) => {
+    request(app).delete('/options/' + string_id).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

@@ -3,49 +3,15 @@ const app = require('../src/app.js');
 const connection = require('../src/db/connection.js');
 const pool = connection.pool;
 
-let adminRole = {
-  id: 1,
-  name: 'ADMIN',
-  description: 'admin role',
-};
-
-let dummyRole = {
-  id: 200,
-  name: 'ADMIN',
-  description: 'admin role',
-};
-
-let dummyUser = {
-  id: '123123123123123',
-  name: 'John',
-  surname: 'Doe',
-}
-
-let adminUser = {
-  id: '1231231231231234',
-  name: 'John',
-  surname: 'Doe',
-};
-
-let dummyProject = {
-  name: 'test',
-  description: 'cga test',
-  creation_date: '2019-01-01T01:00:00.000Z',
-  user_id: adminUser.id
-};
-
-let dummyMember = {
-  role_id: dummyRole.id,
-  user_id: dummyUser.id,
-  status: 'active'
-};
-
-let dummyIncompleteMember = {
-  status: 'active'
-};
-
-let invalid_id = 111111;
-let string_id = "AAAA";
+const invalid_id = require('./dummies.js').invalid_id;
+const string_id = require('./dummies.js').string_id;
+const adminRole = require('./dummies.js').adminRole;
+const adminUser = require('./dummies.js').adminUser;
+const dummyProject = require('./dummies.js').dummyProject;
+const dummyRole = require('./dummies.js').dummyRole;
+const dummyUser = require('./dummies.js').dummyUser;
+const dummyMember = require('./dummies.js').dummyMember;
+const dummyIncompleteMember = require('./dummies.js').dummyIncompleteMember;
 
 beforeAll(async (done) => {
   process.env.NODE_ENV = 'test';

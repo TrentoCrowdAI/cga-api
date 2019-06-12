@@ -84,7 +84,7 @@ const updateSurveyItemLabel = (request, response) => {
             response.status(500).send("Internal Server Error");
           }else if(results.rowCount == 0){
             console.log(request.body.label_survey_item);
-            response.status(404).send("SurveyItemLable not found");
+            response.status(404).send("SurveyItemLabel not found");
           }else{
             response.status(202).send(results.rows);
           }
@@ -108,7 +108,7 @@ const deleteSurveyItemLabel = (request, response) => {
           console.log(error);
           response.status(500).send("Internal Server Error");
         }else if(results.rowCount == 0){
-          response.status(404).send("SurveyItemLable not found");
+          response.status(404).send("SurveyItemLabel not found");
         }else{
           response.status(204).send({id: survey_item_label_id});
         }

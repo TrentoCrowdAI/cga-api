@@ -3,19 +3,10 @@ const app = require('../src/app.js');
 const connection = require('../src/db/connection.js');
 const pool = connection.pool;
 
-let dummyRole = {
-  id: 100,
-  name: 'ADMIN',
-  description: 'admin role',
-};
-
-let dummyIncompleteRole = {
-  id: 1,
-  name: 'ADMIN',
-};
-
-let invalid_id = 111111;
-let string_id = "AAAA";
+const invalid_id = require('./dummies.js').invalid_id;
+const string_id = require('./dummies.js').string_id;
+const dummyRole = require('./dummies.js').dummyRole;
+const dummyIncompleteRole = require('./dummies.js').dummyIncompleteRole;
 
 beforeAll(()=>{
   process.env.NODE_ENV = 'test';

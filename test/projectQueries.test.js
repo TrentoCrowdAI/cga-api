@@ -3,41 +3,22 @@ const app = require('../src/app.js');
 const connection = require('../src/db/connection.js');
 const pool = connection.pool;
 
-let dummyRole = {
-  id: 1,
-  name: 'ADMIN',
-  description: 'admin role',
-};
-
-let dummyUser = {
-  id: '123123123123123',
-  name: 'John',
-  surname: 'Doe',
-};
-
-let dummyProject = {
-  name: 'test',
-  description: 'cga test',
-  creation_date: '2019-01-01T01:00:00.000Z'
-};
-
-let dummyIncompleteProject = {
-  name: 'test',
-  description: 'cga test',
-};
-
-let invalid_id = 111111;
-let string_id = "AAAA";
+const invalid_id = require('./dummies.js').invalid_id;
+const string_id = require('./dummies.js').string_id;
+const dummyProject = require('./dummies.js').dummyProject;
+const adminRole = require('./dummies.js').adminRole;
+const dummyUser = require('./dummies.js').dummyUser;
+const dummyIncompleteProject = require('./dummies.js').dummyIncompleteProject;
 
 beforeAll(async (done) => {
   process.env.NODE_ENV = 'test';
-  await request(app).post('/roles').set('Accept', /json/).send({role: dummyRole});
+  await request(app).post('/roles').set('Accept', /json/).send({role: adminRole});
   await request(app).post('/users').set('Accept', /json/).send({user: dummyUser});
   done();
 });
 
 afterAll(async () => {
-  await request(app).delete('/roles/'+dummyRole.id);
+  await request(app).delete('/roles/'+adminRole.id);
   await request(app).delete('/users/'+dummyUser.id);
   pool.end();
 });

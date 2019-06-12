@@ -3,42 +3,13 @@ const app = require('../src/app.js');
 const connection = require('../src/db/connection.js');
 const pool = connection.pool;
 
-let invalid_id = 1111;
-let string_id = "asdasd";
-
-let adminRole = {
-  id: 1,
-  name: 'ADMIN',
-  description: 'admin role',
-};
-
-let adminUser = {
-  id: '123123123123123',
-  name: 'John',
-  surname: 'Doe',
-};
-
-let dummyProject = {
-  name: 'test',
-  description: 'cga test',
-  creation_date: '2019-01-01T01:00:00.000Z',
-  user_id: adminUser.id
-};
-
-let dummyDataCollection = {
-  name: "test", 
-  description: "testads", 
-  type:"aasdasd", 
-  start_date:"2019-01-01T02:00:00.000Z", 
-  end_date:"2019-10-01T02:00:00.000Z"
-};
-
-let dummyIncompleteDataCollection = {
-  name: "test", 
-  description: "testads", 
-  type:"aasdasd", 
-  start_date:"2019-01-01T02:00:00.000Z", 
-};
+const invalid_id = require('./dummies.js').invalid_id;
+const string_id = require('./dummies.js').string_id;
+const adminRole = require('./dummies.js').adminRole;
+const adminUser = require('./dummies.js').adminUser;
+const dummyProject = require('./dummies.js').dummyProject;
+const dummyDataCollection = require('./dummies.js').dummyDataCollection;
+const dummyIncompleteDataCollection = require('./dummies.js').dummyIncompleteDataCollection;
 
 beforeAll(async (done) => {
   process.env.NODE_ENV = 'test';

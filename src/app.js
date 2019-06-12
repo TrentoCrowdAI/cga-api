@@ -44,7 +44,7 @@ passport.use(new GoogleStrategy(google,
 // Serialize user into the sessions
 passport.serializeUser((user, done) => done(null, user));
 
-// Desrialize user from the sessions
+// Deserialize user from the sessions
 passport.deserializeUser((user, done) => done(null,user));
 
 // Inzialize http server
@@ -83,6 +83,8 @@ var surveys = require("./controllers/apis/surveys.js");
 var surveyComponents = require("./controllers/apis/surveyComponents.js");
 var surveyItems = require("./controllers/apis/surveyItems.js");
 var surveyItemLabels = require("./controllers/apis/surveyItemLabels.js");
+var surveyItemOptions = require("./controllers/apis/surveyItemOptions.js");
+var surveyItemOptionLabels = require("./controllers/apis/surveyItemOptionLabel.js");
 var subjects = require("./controllers/apis/subjects.js");
 users.init(app);
 projects.init(app);
@@ -92,6 +94,8 @@ surveys.init(app);
 surveyComponents.init(app);
 surveyItems.init(app);
 surveyItemLabels.init(app);
+surveyItemOptions.init(app);
+surveyItemOptionLabels.init(app);
 subjects.init(app);
 
 module.exports = app;

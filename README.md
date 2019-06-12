@@ -10,6 +10,7 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 │   │           ├── roles.js
 │   │           ├── subjects.js
 │   │           ├── surveyComponents.js
+│   │           ├── surveyItems.js
 │   │           ├── surveys.js
 │   │           └── users.js
 │   └── db
@@ -21,6 +22,7 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 │   │   ├── roleQueries.js
 │   │   ├── subjectQueries.js
 │   │   ├── surveyComponentQueries.js
+│   │   ├── surveyItemQueries.js
 │   │   ├── surveyQueries.js
 │   │   ├── surveyResponseQueries.js
 │   │   └── userQueries.js
@@ -34,6 +36,7 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 │       ├── roleQueries.test.js
 │       ├── subjectQueries.test.js
 │       ├── surveyComponentQueries.test.js
+│       ├── surveyItemQueries.test.js
 │       ├── surveyQueries.test.js
 │       └── userQueries.test.js
 ├── package.json

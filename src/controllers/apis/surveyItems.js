@@ -4,6 +4,7 @@
  */
 
 const dbSurveyItem = require('../../db/surveyItemQueries.js');
+const dbSurveyItemLabel = require('../../db/surveyItemLabelQueries.js');
 const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {
@@ -13,5 +14,9 @@ exports.init = function (app) {
   app.put('/surveyItems/:id', isLoggedIn, dbSurveyItem.updateSurveyItem);
 
   app.delete('/surveyItems/:id', isLoggedIn, dbSurveyItem.deleteSurveyItem);
+
+  app.get('/surveyItems/:id/labels', isLoggedIn, dbSurveyItemLabel.getSurveyItemLabels);
+
+  app.post('/surveyItems/:id/labels', isLoggedIn, dbSurveyItemLabel.createSurveyItemLabel);
 
 };

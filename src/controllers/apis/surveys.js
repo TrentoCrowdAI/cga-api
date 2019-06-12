@@ -5,7 +5,7 @@
 
 const dbSurvey = require('../../db/surveyQueries.js');
 const dbSurveyResponse = require('../../db/surveyResponseQueries.js');
-const dbMember = require('../../db/memberQueries.js');
+const dbSurveyComponent = require('../../db/surveyComponentQueries.js');
 const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {
@@ -21,5 +21,9 @@ exports.init = function (app) {
   app.post('/surveys/:id/subjects', isLoggedIn, dbSurveyResponse.addSubjectToSurvey);
 
   app.get('/surveys/:id/responses', isLoggedIn, dbSurveyResponse.getSurveyResponses);
+
+  app.get('/surveys/:id/surveyComponents', isLoggedIn, dbSurveyComponent.getSurveyComponents);
+
+  app.post('/surveys/:id/surveyComponents', isLoggedIn, dbSurveyComponent.createSurveyComponent);
 
 };

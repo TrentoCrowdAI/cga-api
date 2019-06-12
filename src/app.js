@@ -80,12 +80,14 @@ var projects = require("./controllers/apis/projects.js");
 var roles = require("./controllers/apis/roles.js");
 var dataCollections = require("./controllers/apis/dataCollections.js");
 var surveys = require("./controllers/apis/surveys.js");  
+var surveyComponents = require("./controllers/apis/surveyComponents.js");
 var subjects = require("./controllers/apis/subjects.js");
 users.init(app);
 projects.init(app);
 roles.init(app);
 dataCollections.init(app);
 surveys.init(app);
+surveyComponents.init(app);
 subjects.init(app);
 
 module.exports = app;

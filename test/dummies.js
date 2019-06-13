@@ -137,10 +137,24 @@ let dummyIncompleteMember = {
   status: 'active'
 };
 
+let dummyResponse = {
+};
+
+let dummyIncompleteResponse = {
+  status: 'incomplete',
+};
+
+let dummyComponentResponse = { 
+  user_id: dummyUser.id
+};
+let dummyIncompleteComponentResponse = {
+  creation_date:"2019-01-01T02:00:00.000Z", 
+};
+
 let invalid_id = 111111;
 let string_id = "AAAA";
 
 module.exports = {string_id, invalid_id, dummyUser, dummyIncompleteUser, adminRole, adminUser, dummyProject, dummyIncompleteProject, dummyDataCollection, dummyIncompleteDataCollection,
   dummySurvey, dummyIncompleteSurvey, dummySurveyComponent, dummySurveyItem, dummyIncompleteSurveyItem, dummySurveyItemOption, dummyIncompleteSurveyItemOption, dummySurveyItemOptionLabel, 
   dummyIncompleteSurveyItemLabel, dummyIncompleteSurveyItemOptionLabel, dummySurveyItemLabel, dummyIncompleteSurveyComponent, dummySubject, dummyIncompleteSubject, dummyRole, dummyIncompleteRole, 
-  dummyMember, dummyIncompleteMember};
+  dummyMember, dummyIncompleteMember, dummyResponse, dummyIncompleteResponse, dummyComponentResponse, dummyIncompleteComponentResponse};

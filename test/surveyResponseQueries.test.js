@@ -13,13 +13,8 @@ const dummySurvey = require('./dummies.js').dummySurvey;
 const dummySurveyComponent = require('./dummies.js').dummySurveyComponent;
 const dummySurveyItem = require('./dummies.js').dummySurveyItem;
 const dummySubject = require('./dummies.js').dummySubject;
-
-let dummyResponse = {
-};
-
-let dummyIncompleteResponse = {
-  status: 'incomplete',
-};
+const dummyResponse = require('./dummies.js').dummyResponse;
+const dummyIncompleteResponse = require('./dummies.js').dummyIncompleteResponse;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';

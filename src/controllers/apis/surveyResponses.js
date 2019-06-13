@@ -4,6 +4,7 @@
  */
 
 const dbSurveyResponse = require('../../db/surveyResponseQueries.js');
+const dbSurveyComponentResponse = require('../../db/surveyComponentResponseQueries.js');
 const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {
@@ -13,5 +14,9 @@ exports.init = function (app) {
   app.put('/responses/:id', isLoggedIn, dbSurveyResponse.updateSurveyResponse);
 
   app.delete('/responses/:id', isLoggedIn, dbSurveyResponse.deleteSurveyResponse);
+
+  app.get('/responses/:id/componentResponses', isLoggedIn, dbSurveyComponentResponse.getSurveyComponentResponses);
+
+  app.post('/responses/:id/user', isLoggedIn, dbSurveyComponentResponse.createSurveyComponentResponse);
 
 };

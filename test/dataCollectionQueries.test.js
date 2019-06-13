@@ -9,7 +9,6 @@ const adminRole = require('./dummies.js').adminRole;
 const adminUser = require('./dummies.js').adminUser;
 const dummyProject = require('./dummies.js').dummyProject;
 const dummyDataCollection = require('./dummies.js').dummyDataCollection;
-const dummyIncompleteDataCollection = require('./dummies.js').dummyIncompleteDataCollection;
 
 beforeAll(async (done) => {
   process.env.NODE_ENV = 'test';
@@ -69,7 +68,7 @@ describe('Test /projects/:id/dataCollections method root path', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/projects/' + dummyProject.id + "/dataCollections").set('Accept', /json/).send({data_collection: dummyIncompleteDataCollection}).then((response) => {
+    request(app).post('/projects/' + dummyProject.id + "/dataCollections").set('Accept', /json/).send({data_collection: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -113,19 +112,19 @@ describe('Test /dataCollections method root path', () => {
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/dataCollections/' + dummyDataCollection.id).set('Accept', /json/).send({data_collection: dummyIncompleteDataCollection}).then((response) => {
+    request(app).put('/dataCollections/' + dummyDataCollection.id).set('Accept', /json/).send({data_collection: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/dataCollections/' + invalid_id).set('Accept', /json/).send({data_collection: dummyIncompleteDataCollection}).then((response) => {
+    request(app).put('/dataCollections/' + invalid_id).set('Accept', /json/).send({data_collection: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/dataCollections/' + string_id).set('Accept', /json/).send({data_collection: dummyIncompleteDataCollection}).then((response) => {
+    request(app).put('/dataCollections/' + string_id).set('Accept', /json/).send({data_collection: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

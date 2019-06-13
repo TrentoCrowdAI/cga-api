@@ -1,0 +1,128 @@
+DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS survey_item_response;
+DROP TABLE IF EXISTS survey_component_response;
+DROP TABLE IF EXISTS label_survey_item_option;
+DROP TABLE IF EXISTS survey_item_option;
+DROP TABLE IF EXISTS label_survey_item;
+DROP TABLE IF EXISTS survey_item;
+DROP TABLE IF EXISTS survey_response;
+DROP TABLE IF EXISTS survey_component;
+DROP TABLE IF EXISTS survey;
+DROP TABLE IF EXISTS data_collection;
+DROP TABLE IF EXISTS project;
+DROP TABLE IF EXISTS "user";
+DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS subject;
+
+CREATE TABLE project(
+ id SERIAL PRIMARY KEY NOT NULL,
+ name VARCHAR (100) NOT NULL,
+ description VARCHAR (300) NOT NULL,
+ creation_date TIMESTAMP (2) NOT NULL
+);
+
+CREATE TABLE "user"(
+ id VARCHAR(30) PRIMARY KEY NOT NULL,
+ name VARCHAR (100) NOT NULL,
+ surname VARCHAR (100) NOT NULL
+);
+
+CREATE TABLE role(
+ id INTEGER PRIMARY KEY NOT NULL,
+ name VARCHAR(100) NOT NULL,
+ description VARCHAR(300) NOT NULL
+);
+
+CREATE TABLE member(
+ project_id INTEGER NOT NULL REFERENCES project(id) ON DELETE CASCADE,
+ user_id VARCHAR(30) NOT NULL REFERENCES "user"(id),
+ status VARCHAR (45) NOT NULL,
+ creation_date TIMESTAMP (2) NOT NULL,
+ role_id INTEGER NOT NULL REFERENCES role(id),
+ PRIMARY KEY (project_id, user_id, role_id)
+);
+
+CREATE TABLE data_collection(
+ id SERIAL NOT NULL PRIMARY KEY,
+ name VARCHAR(100) NOT NULL,
+ description VARCHAR(300) NOT NULL,
+ type VARCHAR(45) NOT NULL,
+ start_date TIMESTAMP(2) NOT NULL,
+ end_date TIMESTAMP(2) NOT NULL,
+ project_id INTEGER NOT NULL REFERENCES project(id)
+);
+
+CREATE TABLE survey(
+ id SERIAL PRIMARY KEY NOT NULL,
+ name VARCHAR (100) NOT NULL,
+ description VARCHAR(300) NOT NULL,
+ data_collection_id INTEGER NOT NULL REFERENCES data_collection(id)
+);
+
+CREATE TABLE survey_component(
+ id SERIAL PRIMARY KEY NOT NULL,
+ name VARCHAR (100) NOT NULL,
+ survey_id INTEGER NOT NULL REFERENCES survey(id),
+ role_id INTEGER NOT NULL REFERENCES role(id)
+);
+
+CREATE TABLE survey_item(
+ id SERIAL PRIMARY KEY NOT NULL,
+ name VARCHAR (100) NOT NULL,
+ type VARCHAR (45) NOT NULL,
+ survey_component_id INTEGER NOT NULL REFERENCES survey_component(id)
+);
+
+CREATE TABLE label_survey_item(
+ id SERIAL PRIMARY KEY NOT NULL,
+ language VARCHAR (45) NOT NULL,
+ content VARCHAR (100) NOT NULL,
+ survey_item_id INTEGER NOT NULL REFERENCES survey_item(id)
+);
+
+CREATE TABLE survey_item_option(
+ id SERIAL PRIMARY KEY NOT NULL,
+ name VARCHAR (100) NOT NULL,
+ value VARCHAR (100) NOT NULL,
+ type VARCHAR (45) NOT NULL,
+ survey_item_id INTEGER NOT NULL REFERENCES survey_item(id)
+);
+
+CREATE TABLE label_survey_item_option(
+ id SERIAL PRIMARY KEY NOT NULL,
+ language VARCHAR (45) NOT NULL,
+ content VARCHAR (100) NOT NULL,
+ survey_item_option_id INTEGER NOT NULL REFERENCES survey_item_option(id)
+);
+
+CREATE TABLE subject (
+  id SERIAL NOT NULL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  surname VARCHAR(100) NOT NULL,
+  location VARCHAR(100) NOT NULL,
+  contact VARCHAR(300) NOT NULL
+);
+
+CREATE TABLE survey_response (
+  id SERIAL PRIMARY KEY NOT NULL,
+  status VARCHAR(45) NOT NULL,
+  creation_date TIMESTAMP(2) NOT NULL,
+  survey_id INTEGER NOT NULL REFERENCES survey(id),
+  subject_id INTEGER NOT NULL REFERENCES subject(id)
+);
+
+CREATE TABLE survey_component_response (
+  id SERIAL PRIMARY KEY NOT NULL,
+  status VARCHAR(45) NOT NULL,
+  creation_date TIMESTAMP(2) NOT NULL,
+  survey_response_id INTEGER NOT NULL REFERENCES survey_response(id),
+  user_id VARCHAR(30) NOT NULL REFERENCES "user"(id)
+);
+
+CREATE TABLE survey_item_response (
+  id SERIAL PRIMARY KEY NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  value VARCHAR(100) NOT NULL,
+  survey_component_response_id INTEGER NOT NULL REFERENCES survey_component_response(id),
+  survey_item_id INTEGER NOT NULL REFERENCES survey_item(id)
+);

@@ -11,7 +11,6 @@ const dummyProject = require('./dummies.js').dummyProject;
 const dummyRole = require('./dummies.js').dummyRole;
 const dummyUser = require('./dummies.js').dummyUser;
 const dummyMember = require('./dummies.js').dummyMember;
-const dummyIncompleteMember = require('./dummies.js').dummyIncompleteMember;
 
 beforeAll(async (done) => {
   process.env.NODE_ENV = 'test';
@@ -72,7 +71,7 @@ describe('Project path test', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/projects/'+dummyProject.id+'/members').set('Accept', /json/).send({member: dummyIncompleteMember}).then((response) => {
+    request(app).post('/projects/'+dummyProject.id+'/members').set('Accept', /json/).send({member: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -118,7 +117,7 @@ describe('Project path test', () => {
     });
   });
   test('Test PUT method with incomplete data', (done) => {
-    request(app).put('/projects/'+dummyProject.id+'/members/'+dummyMember.user_id).set('Accept', /json/).send({member: dummyIncompleteMember}).then((response) => {
+    request(app).put('/projects/'+dummyProject.id+'/members/'+dummyMember.user_id).set('Accept', /json/).send({member: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

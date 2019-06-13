@@ -6,7 +6,6 @@ const pool = connection.pool;
 const invalid_id = require('./dummies.js').invalid_id;
 const string_id = require('./dummies.js').string_id;
 const dummySubject = require('./dummies.js').dummySubject;
-const dummyIncompleteSubject = require('./dummies.js').dummyIncompleteSubject;
 
 beforeAll(() => {
   process.env.NODE_ENV = 'test';
@@ -46,7 +45,7 @@ describe('Subject path test', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/subjects').set('Accept', /json/).send({subject: dummyIncompleteSubject}).then((response) => {
+    request(app).post('/subjects').set('Accept', /json/).send({subject: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -92,7 +91,7 @@ describe('Subject path test', () => {
     });
   });
   test('Test PUT method with incomplete data', (done) => {
-    request(app).put('/subjects/'+dummySubject.id).set('Accept', /json/).send({subject: dummyIncompleteSubject}).then((response) => {
+    request(app).put('/subjects/'+dummySubject.id).set('Accept', /json/).send({subject: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

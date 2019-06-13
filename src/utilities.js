@@ -1,7 +1,9 @@
+const dummyUser = {id: '123123123123123',name: 'John',surname: 'Doe'};
+
 const isLoggedIn = (req, res, next) => {
   if(process.env.NODE_ENV === 'test'){
     req.session = req.session || {};
-    req.session.user =  {id: '123123123123123',name: 'John',surname: 'Doe',};
+    req.session.user = dummyUser;
   }else{
     console.log(req.session);
   }
@@ -12,10 +14,10 @@ const isLoggedIn = (req, res, next) => {
   }
 } 
 
-const isLoggedIn2 = (req, res, next) => {
+const isLoggedInWithAdminCheck = (req, res, next) => {
   if(process.env.NODE_ENV === 'test'){
     req.session = req.session || {};
-    req.session.user = {id: '123123123123123',name: 'John',surname: 'Doe',};
+    req.session.user = dummyUser;
   }else{
     console.log(req.session);
   }
@@ -26,4 +28,4 @@ const isLoggedIn2 = (req, res, next) => {
   }
 }
 
-module.exports = {isLoggedIn};
+module.exports = {isLoggedIn, isLoggedInWithAdminCheck};

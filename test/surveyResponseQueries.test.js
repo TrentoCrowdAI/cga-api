@@ -14,7 +14,6 @@ const dummySurveyComponent = require('./dummies.js').dummySurveyComponent;
 const dummySurveyItem = require('./dummies.js').dummySurveyItem;
 const dummySubject = require('./dummies.js').dummySubject;
 const dummyResponse = require('./dummies.js').dummyResponse;
-const dummyIncompleteResponse = require('./dummies.js').dummyIncompleteResponse;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
@@ -165,19 +164,19 @@ describe('Test /surveyItemLabels method root path', () => {
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/responses/' + dummyResponse.id).set('Accept', /json/).send({survey_response: dummyIncompleteResponse}).then((response) => {
+    request(app).put('/responses/' + dummyResponse.id).set('Accept', /json/).send({survey_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/responses/' + invalid_id).set('Accept', /json/).send({survey_response: dummyIncompleteResponse}).then((response) => {
+    request(app).put('/responses/' + invalid_id).set('Accept', /json/).send({survey_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/responses/' + string_id).set('Accept', /json/).send({survey_response: dummyIncompleteResponse}).then((response) => {
+    request(app).put('/responses/' + string_id).set('Accept', /json/).send({survey_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

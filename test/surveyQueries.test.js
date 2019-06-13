@@ -10,7 +10,6 @@ const adminUser = require('./dummies.js').adminUser;
 const dummyProject = require('./dummies.js').dummyProject;
 const dummyDataCollection = require('./dummies.js').dummyDataCollection;
 const dummySurvey = require('./dummies.js').dummySurvey;
-const dummyIncompleteSurvey = require('./dummies.js').dummyIncompleteSurvey;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
@@ -75,7 +74,7 @@ describe('Test /dataCollections/:id/surveys method root path', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/dataCollections/' + dummyDataCollection.id + "/surveys").set('Accept', /json/).send({survey: dummyIncompleteSurvey}).then((response) => {
+    request(app).post('/dataCollections/' + dummyDataCollection.id + "/surveys").set('Accept', /json/).send({survey: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -115,19 +114,19 @@ describe('Test /dataCollections method root path', () => {
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/surveys/' + dummySurvey.id).set('Accept', /json/).send({survey: dummyIncompleteSurvey}).then((response) => {
+    request(app).put('/surveys/' + dummySurvey.id).set('Accept', /json/).send({survey: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/surveys/' + invalid_id).set('Accept', /json/).send({survey: dummyIncompleteSurvey}).then((response) => {
+    request(app).put('/surveys/' + invalid_id).set('Accept', /json/).send({survey: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/surveys/' + string_id).set('Accept', /json/).send({survey: dummyIncompleteSurvey}).then((response) => {
+    request(app).put('/surveys/' + string_id).set('Accept', /json/).send({survey: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

@@ -6,7 +6,6 @@ const pool = connection.pool;
 const invalid_id = require('./dummies.js').invalid_id;
 const string_id = require('./dummies.js').string_id;
 const dummyRole = require('./dummies.js').dummyRole;
-const dummyIncompleteRole = require('./dummies.js').dummyIncompleteRole;
 
 beforeAll(()=>{
   process.env.NODE_ENV = 'test';
@@ -46,7 +45,7 @@ describe('Role path test', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/roles').set('Accept', /json/).send({role: dummyIncompleteRole}).then((response) => {
+    request(app).post('/roles').set('Accept', /json/).send({role: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -88,7 +87,7 @@ describe('Role path test', () => {
     });
   });
   test('Test PUT method with incomplete data', (done) => {
-    request(app).put('/roles/'+dummyRole.id).set('Accept', /json/).send({role: dummyIncompleteRole}).then((response) => {
+    request(app).put('/roles/'+dummyRole.id).set('Accept', /json/).send({role: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

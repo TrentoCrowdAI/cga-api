@@ -1,4 +1,4 @@
-# CGA-api 
+# cga-api 
 [![Build Status](https://travis-ci.com/TrentoCrowdAI/cga-api.svg?branch=master)](https://travis-ci.com/TrentoCrowdAI/cga-api)
 
 ## Content
@@ -16,6 +16,7 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 │   │           ├── surveyComponents.js
 │   │           ├── surveyItemLabels.js
 │   │           ├── surveyItemOptions.js
+│   │           ├── surveyItemResponses.js
 │   │           ├── surveyItems.js
 │   │           ├── surveyResponses.js
 │   │           ├── surveys.js
@@ -34,6 +35,7 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 │   │   ├── surveyItemOptionLabelQueries.js
 │   │   ├── surveyItemOptionQueries.js
 │   │   ├── surveyItemQueries.js
+│   │   ├── surveyItemResponseQueries.js
 │   │   ├── surveyQueries.js
 │   │   ├── surveyResponseQueries.js
 │   │   └── userQueries.js
@@ -53,11 +55,13 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 │       ├── surveyItemOptionLabelQueries.test.js
 │       ├── surveyItemOptionQueries.test.js
 │       ├── surveyItemQueries.test.js
+│       ├── surveyItemResponseQueries.test.js
 │       ├── surveyQueries.test.js
 │       ├── surveyResponseQueries.test.js
 │       └── userQueries.test.js
 ├── package.json
 ├── Procfile
 ├── README.md
+├── ScriptDbCreation.txt
 └── server.js
 ```

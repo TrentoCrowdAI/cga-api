@@ -6,7 +6,6 @@ const pool = connection.pool;
 const invalid_id = require('./dummies.js').invalid_id;
 const string_id = require('./dummies.js').string_id;
 const dummyUser = require('./dummies.js').dummyUser;
-const dummyIncompleteUser = require('./dummies.js').dummyIncompleteUser;
 
 beforeAll(() => {
   process.env.NODE_ENV = 'test';
@@ -76,19 +75,19 @@ describe('Test /users method root path', () => {
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/users/' + dummyUser.id).set('Accept', /json/).send({user: dummyIncompleteUser}).then((response) => {
+    request(app).put('/users/' + dummyUser.id).set('Accept', /json/).send({user: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/users/' + invalid_id).set('Accept', /json/).send({user: dummyIncompleteUser}).then((response) => {
+    request(app).put('/users/' + invalid_id).set('Accept', /json/).send({user: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/users/' + string_id).set('Accept', /json/).send({user: dummyIncompleteUser}).then((response) => {
+    request(app).put('/users/' + string_id).set('Accept', /json/).send({user: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

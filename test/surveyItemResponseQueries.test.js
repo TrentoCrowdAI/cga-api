@@ -15,6 +15,7 @@ const dummySurveyItem = require('./dummies.js').dummySurveyItem;
 const dummySubject = require('./dummies.js').dummySubject;
 const dummyResponse = require('./dummies.js').dummyResponse;
 const dummyComponentResponse = require('./dummies.js').dummyComponentResponse;
+const dummyItemResponse = require('./dummies.js').dummyItemResponse;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
@@ -35,14 +36,23 @@ beforeAll(async () => {
               dummySurveyItem.survey_component_id = response.body.id;
               await request(app).post('/surveyComponents/' + dummySurveyComponent.id + "/surveyItems").set('Accept', /json/).send({survey_item: dummySurveyItem}).then(async (response) => {
                 dummySurveyItem.id = response.body.id;
+                dummyItemResponse.survey_item_id = response.body.id;
                 await request(app).post('/subjects').set('Accept', /json/).send({subject: dummySubject}).then(async (response) => {
                   dummySubject.id = response.body.id;
                   dummyResponse.subject_id = response.body.id;
-                  await request(app).post('/surveys/' + dummySurvey.id + "/subjects").set('Accept', /json/).send({subject: dummySubject}).then((response) => {
+                  await request(app).post('/surveys/' + dummySurvey.id + "/subjects").set('Accept', /json/).send({subject: dummySubject}).then(async (response) => {
                     dummyResponse.id = response.body[0].id;
                     dummyResponse.status = response.body[0].status;
                     dummyResponse.creation_date = response.body[0].creation_date;
                     dummyComponentResponse.survey_response_id = response.body[0].id;
+                    await request(app).post('/responses/' + dummyResponse.id + "/user").set('Accept', /json/).send({user: dummyUser}).then((response) => {
+                      dummyComponentResponse.id = response.body[0].id;
+                      dummyComponentResponse.status = response.body[0].status;
+                      dummyComponentResponse.creation_date = response.body[0].creation_date;
+                      dummyComponentResponse.survey_response_id = response.body[0].survey_response_id;
+                      dummyComponentResponse.user_id = response.body[0].user_id;
+                      dummyItemResponse.survey_component_response_id = response.body[0].id;
+                    });
                   });
                 });
               });
@@ -55,15 +65,17 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await request(app).delete('/responses/' + dummyResponse.id).then(async () => {
-    await request(app).delete('/subjects/' + dummySubject.id).then(async () => {
-      await request(app).delete('/surveyItems/' + dummySurveyItem.id).then(async () => {
-        await request(app).delete('/surveyComponents/' + dummySurveyComponent.id).then(async () => {
-          await request(app).delete('/surveys/' + dummySurvey.id).set('Accept', /json/).send({survey: dummySurvey}).then(async () => {
-            await request(app).delete('/dataCollections/' + dummyDataCollection.id).set('Accept', /json/).send({data_collection: dummyDataCollection}).then(async () => {
-              await request(app).delete('/projects/' + dummyProject.id).then(async () => {
-                await request(app).delete('/users/' + dummyUser.id).then(async () => {
-                  await request(app).delete('/roles/' + adminRole.id);
+  await request(app).delete('/componentResponses/' + dummyComponentResponse.id).then(async () => {
+    await request(app).delete('/responses/' + dummyResponse.id).then(async () => {
+      await request(app).delete('/subjects/' + dummySubject.id).then(async () => {
+        await request(app).delete('/surveyItems/' + dummySurveyItem.id).then(async () => {
+          await request(app).delete('/surveyComponents/' + dummySurveyComponent.id).then(async () => {
+            await request(app).delete('/surveys/' + dummySurvey.id).set('Accept', /json/).send({survey: dummySurvey}).then(async () => {
+              await request(app).delete('/dataCollections/' + dummyDataCollection.id).set('Accept', /json/).send({data_collection: dummyDataCollection}).then(async () => {
+                await request(app).delete('/projects/' + dummyProject.id).then(async () => {
+                  await request(app).delete('/users/' + dummyUser.id).then(async () => {
+                    await request(app).delete('/roles/' + adminRole.id);
+                  });
                 });
               });
             });
@@ -90,32 +102,28 @@ describe('Test the root path', () => {
   });
 });
 
-describe('Test /responses/:id/componentResponses method root path', () => {
+describe('Test /componentResponses/:id/surveyItemResponses method root path', () => {
   test('Test GET method', (done) => {
-    request(app).get('/responses/' + dummyResponse.id + "/componentResponses").then((response) => {
+    request(app).get('/componentResponses/' + dummyResponse.id + "/surveyItemResponses").then((response) => {
       expect(response.statusCode).toBe(200);
       done();
     });
   });
   test('Test POST method', (done) => {
-    request(app).post('/responses/' + dummyResponse.id + "/user").set('Accept', /json/).send({user: dummyUser}).then((response) => {
+    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
       expect(response.statusCode).toBe(201);
-      dummyComponentResponse.id = response.body[0].id;
-      dummyComponentResponse.status = response.body[0].status;
-      dummyComponentResponse.creation_date = response.body[0].creation_date;
-      dummyComponentResponse.survey_response_id = response.body[0].survey_response_id;
-      dummyComponentResponse.user_id = response.body[0].user_id;
+      dummyItemResponse.id = response.body.id;
       done();
     });
   });
   test('Test POST method without data', (done) => {
-    request(app).post('/responses/' + dummyComponentResponse.id + "/user").set('Accept', /json/).send({}).then((response) => {
+    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/responses/' + dummyComponentResponse.id + "/user").set('Accept', /json/).send({user: {}}).then((response) => {
+    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -123,101 +131,101 @@ describe('Test /responses/:id/componentResponses method root path', () => {
 });
 describe('Test /componentResponses method root path', () => {
   test('Test GET method with valid id', (done) => {
-    request(app).get('/componentResponses/' + dummyComponentResponse.id).set('Accept', /json/).send().then((response) => {
+    request(app).get('/surveyItemResponses/' + dummyItemResponse.id).set('Accept', /json/).send().then((response) => {
       expect(response.statusCode).toBe(200);
-      expect(response.body[0].id).toBe(dummyComponentResponse.id);
-      expect(response.body[0].status).toBe(dummyComponentResponse.status);
-      expect(response.body[0].creation_date.substring(0,10)).toBe(dummyComponentResponse.creation_date.substring(0,10)); //problem with date
-      expect(response.body[0].survey_response_id).toBe(dummyComponentResponse.survey_response_id);
-      expect(response.body[0].user_id).toBe(dummyComponentResponse.user_id);
+      expect(response.body[0].id).toBe(dummyItemResponse.id);
+      expect(response.body[0].name).toBe(dummyItemResponse.name);
+      expect(response.body[0].value).toBe(dummyItemResponse.value); 
+      expect(response.body[0].survey_item_id).toBe(dummyItemResponse.survey_item_id);
+      expect(response.body[0].survey_component_response_id).toBe(dummyItemResponse.survey_component_response_id);
       done();
     });
   });
   test('Test GET method with invalid id', (done) => {
-    request(app).get('/componentResponses/' + invalid_id).set('Accept', /json/).send({survey_component_response: dummyComponentResponse}).then((response) => {
+    request(app).get('/surveyItemResponses/' + invalid_id).set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
       expect(response.statusCode).toBe(404);
       done();
     });
   });
   test('Test GET method with string id', (done) => {
-    request(app).get('/componentResponses/' + string_id).then((response) => {
+    request(app).get('/surveyItemResponses/' + string_id).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test GET subject method', (done) => {
-    request(app).get('/componentResponses/' + dummyComponentResponse.id).then((response) => {
+    request(app).get('/surveyItemResponses/' + dummyItemResponse.id).then((response) => {
       expect(response.statusCode).toBe(200);
       done();
     });
   });
   test('Test GET subject method with invalid_id', (done) => {
-    request(app).get('/componentResponses/' + invalid_id).then((response) => {
+    request(app).get('/surveyItemResponses/' + invalid_id).then((response) => {
       expect(response.statusCode).toBe(404);
       done();
     });
   });
   test('Test GET subject method with string_id', (done) => {
-    request(app).get('/componentResponses/' + string_id).then((response) => {
+    request(app).get('/surveyItemResponses/' + string_id).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT', (done) => {
-    request(app).put('/componentResponses/' + dummyComponentResponse.id).set('Accept', /json/).send({survey_component_response: dummyComponentResponse}).then((response) => {
+    request(app).put('/surveyItemResponses/' + dummyItemResponse.id).set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
       expect(response.statusCode).toBe(202);
-      expect(response.body[0].id).toBe(dummyComponentResponse.id);
-      expect(response.body[0].status).toBe(dummyComponentResponse.status);
-      expect(response.body[0].creation_date.substring(0,10)).toBe(dummyComponentResponse.creation_date.substring(0,10)); //problem with date
-      expect(response.body[0].survey_response_id).toBe(dummyComponentResponse.survey_response_id);
-      expect(response.body[0].user_id).toBe(dummyComponentResponse.user_id);
+      expect(response.body[0].id).toBe(dummyItemResponse.id);
+      expect(response.body[0].name).toBe(dummyItemResponse.name);
+      expect(response.body[0].value).toBe(dummyItemResponse.value); 
+      expect(response.body[0].survey_item_id).toBe(dummyItemResponse.survey_item_id);
+      expect(response.body[0].survey_component_response_id).toBe(dummyItemResponse.survey_component_response_id);
       done();
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/componentResponses/' + dummyComponentResponse.id).set('Accept', /json/).send({survey_component_response: {}}).then((response) => {
+    request(app).put('/surveyItemResponses/' + dummyItemResponse.id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/componentResponses/' + invalid_id).set('Accept', /json/).send({survey_component_response: {}}).then((response) => {
+    request(app).put('/surveyItemResponses/' + invalid_id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/componentResponses/' + string_id).set('Accept', /json/).send({survey_component_response: {}}).then((response) => {
+    request(app).put('/surveyItemResponses/' + string_id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and empty data', (done) => {
-    request(app).put('/componentResponses/' + invalid_id).set('Accept', /json/).send({}).then((response) => {
+    request(app).put('/surveyItemResponses/' + invalid_id).set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and empty data', (done) => {
-    request(app).put('/componentResponses/' + string_id).set('Accept', /json/).send({}).then((response) => {
+    request(app).put('/surveyItemResponses/' + string_id).set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test DELETE', (done) => {
-    request(app).delete('/componentResponses/' + dummyComponentResponse.id).then((response) => {
+    request(app).delete('/surveyItemResponses/' + dummyItemResponse.id).then((response) => {
       expect(response.statusCode).toBe(204);
       done();
     });
   });
   test('Test DELETE with invalid id', (done) => {
-    request(app).delete('/componentResponses/' + invalid_id).then((response) => {
+    request(app).delete('/surveyItemResponses/' + invalid_id).then((response) => {
       expect(response.statusCode).toBe(404);
       done();
     });
   });
   test('Test DELETE with string id', (done) => {
-    request(app).delete('/componentResponses/' + string_id).then((response) => {
+    request(app).delete('/surveyItemResponses/' + string_id).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

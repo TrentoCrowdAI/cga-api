@@ -14,7 +14,6 @@ const dummySurveyComponent = require('./dummies.js').dummySurveyComponent;
 const dummySurveyItem = require('./dummies.js').dummySurveyItem;
 const dummySurveyItemOption = require('./dummies.js').dummySurveyItemOption;
 const dummySurveyItemOptionLabel = require('./dummies.js').dummySurveyItemOptionLabel;
-const dummyIncompleteSurveyItemOptionLabel = require('./dummies.js').dummyIncompleteSurveyItemOptionLabel;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
@@ -103,7 +102,7 @@ describe('Test /options/:id/optionLabels method root path', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/options/' + dummySurveyItemOption.id + "/optionLabels").set('Accept', /json/).send({label_survey_item_option: dummyIncompleteSurveyItemOptionLabel}).then((response) => {
+    request(app).post('/options/' + dummySurveyItemOption.id + "/optionLabels").set('Accept', /json/).send({label_survey_item_option: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -143,19 +142,19 @@ describe('Test /surveyItemLabels method root path', () => {
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/optionLabels/' + dummySurveyItemOptionLabel.id).set('Accept', /json/).send({label_survey_item_option: dummyIncompleteSurveyItemOptionLabel}).then((response) => {
+    request(app).put('/optionLabels/' + dummySurveyItemOptionLabel.id).set('Accept', /json/).send({label_survey_item_option: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/optionLabels/' + invalid_id).set('Accept', /json/).send({label_survey_item_option: dummyIncompleteSurveyItemOptionLabel}).then((response) => {
+    request(app).put('/optionLabels/' + invalid_id).set('Accept', /json/).send({label_survey_item_option: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/optionLabels/' + string_id).set('Accept', /json/).send({label_survey_item_option: dummyIncompleteSurveyItemOptionLabel}).then((response) => {
+    request(app).put('/optionLabels/' + string_id).set('Accept', /json/).send({label_survey_item_option: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

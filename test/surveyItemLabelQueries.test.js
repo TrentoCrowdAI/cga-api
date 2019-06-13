@@ -13,7 +13,6 @@ const dummySurvey = require('./dummies.js').dummySurvey;
 const dummySurveyComponent = require('./dummies.js').dummySurveyComponent;
 const dummySurveyItem = require('./dummies.js').dummySurveyItem;
 const dummySurveyItemLabel = require('./dummies.js').dummySurveyItemLabel;
-const dummyIncompleteSurveyItemLabel = require('./dummies.js').dummyIncompleteSurveyItemLabel;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
@@ -96,7 +95,7 @@ describe('Test /surveyItems/:id/surveyItems method root path', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/surveyItems/' + dummySurveyItem.id + "/labels").set('Accept', /json/).send({label_survey_item: dummyIncompleteSurveyItemLabel}).then((response) => {
+    request(app).post('/surveyItems/' + dummySurveyItem.id + "/labels").set('Accept', /json/).send({label_survey_item: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -136,19 +135,19 @@ describe('Test /surveyItemLabels method root path', () => {
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/labels/' + dummySurveyItemLabel.id).set('Accept', /json/).send({label_survey_item: dummyIncompleteSurveyItemLabel}).then((response) => {
+    request(app).put('/labels/' + dummySurveyItemLabel.id).set('Accept', /json/).send({label_survey_item: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/labels/' + invalid_id).set('Accept', /json/).send({label_survey_item: dummyIncompleteSurveyItemLabel}).then((response) => {
+    request(app).put('/labels/' + invalid_id).set('Accept', /json/).send({label_survey_item: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/labels/' + string_id).set('Accept', /json/).send({label_survey_item: dummyIncompleteSurveyItemLabel}).then((response) => {
+    request(app).put('/labels/' + string_id).set('Accept', /json/).send({label_survey_item: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

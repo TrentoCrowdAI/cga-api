@@ -96,7 +96,7 @@ describe('Test /surveyItems/:id/labels method root path', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/surveyItems/' + dummySurveyItem.id + "/options").set('Accept', /json/).send({survey_item_option: dummyIncompleteSurveyItemOption}).then((response) => {
+    request(app).post('/surveyItems/' + dummySurveyItem.id + "/options").set('Accept', /json/).send({survey_item_option: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -138,19 +138,19 @@ describe('Test /surveyItemOptions method root path', () => {
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/options/' + dummySurveyItemOption.id).set('Accept', /json/).send({survey_item_option: dummyIncompleteSurveyItemOption}).then((response) => {
+    request(app).put('/options/' + dummySurveyItemOption.id).set('Accept', /json/).send({survey_item_option: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/options/' + invalid_id).set('Accept', /json/).send({survey_item_option: dummyIncompleteSurveyItemOption}).then((response) => {
+    request(app).put('/options/' + invalid_id).set('Accept', /json/).send({survey_item_option: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/options/' + string_id).set('Accept', /json/).send({survey_item_option: dummyIncompleteSurveyItemOption}).then((response) => {
+    request(app).put('/options/' + string_id).set('Accept', /json/).send({survey_item_option: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

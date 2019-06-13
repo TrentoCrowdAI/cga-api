@@ -8,7 +8,6 @@ const string_id = require('./dummies.js').string_id;
 const dummyProject = require('./dummies.js').dummyProject;
 const adminRole = require('./dummies.js').adminRole;
 const dummyUser = require('./dummies.js').dummyUser;
-const dummyIncompleteProject = require('./dummies.js').dummyIncompleteProject;
 
 beforeAll(async (done) => {
   process.env.NODE_ENV = 'test';
@@ -53,7 +52,7 @@ describe('Project path test', () => {
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/projects').set('Accept', /json/).send({project: dummyIncompleteProject}).then((response) => {
+    request(app).post('/projects').set('Accept', /json/).send({project: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -97,7 +96,7 @@ describe('Project path test', () => {
     });
   });
   test('Test PUT method with incomplete data', (done) => {
-    request(app).put('/projects/'+dummyProject.id).set('Accept', /json/).send({project: dummyIncompleteProject}).then((response) => {
+    request(app).put('/projects/'+dummyProject.id).set('Accept', /json/).send({project: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

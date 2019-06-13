@@ -87,6 +87,7 @@ var surveyItemOptions = require("./controllers/apis/surveyItemOptions.js");
 var surveyItemOptionLabels = require("./controllers/apis/surveyItemOptionLabel.js");
 var surveyResponses = require("./controllers/apis/surveyResponses.js"); 
 var surveyComponentResponses = require("./controllers/apis/surveyComponentResponses.js"); 
+var surveyItemResponse = require("./controllers/apis/surveyItemResponses.js"); 
 var subjects = require("./controllers/apis/subjects.js");
 users.init(app);
 projects.init(app);
@@ -100,6 +101,7 @@ surveyItemOptions.init(app);
 surveyItemOptionLabels.init(app);
 surveyResponses.init(app);
 surveyComponentResponses.init(app);
+surveyItemResponse.init(app);
 subjects.init(app);
 
 module.exports = app;

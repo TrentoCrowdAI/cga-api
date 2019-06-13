@@ -103,13 +103,13 @@ describe('Project path test', () => {
   });
   test('Test PUT method with invalid id', (done) => {
     request(app).put('/projects/'+invalid_id).set('Accept', /json/).send({project: dummyProject}).then((response) => {
-      expect(response.statusCode).toBe(404);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
   test('Test PUT method with string id', (done) => {
     request(app).put('/projects/'+string_id).set('Accept', /json/).send({project: dummyProject}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
@@ -121,13 +121,13 @@ describe('Project path test', () => {
   });
   test('Test DELETE method with non existing id', (done) => {
     request(app).delete('/projects/'+invalid_id).then((response) => {
-      expect(response.statusCode).toBe(404);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
   test('Test DELETE method with string id', (done) => {
     request(app).delete('/projects/'+string_id).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });

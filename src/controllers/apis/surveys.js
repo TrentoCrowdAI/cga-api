@@ -23,7 +23,7 @@ exports.init = function (app) {
 
   app.get('/surveys/:id/responses', isLoggedIn, dbSurveyResponse.getSurveyResponses);
 
-  app.get('/surveys/:id/surveyComponents', isLoggedIn, dbSurveyResponse.getSurveyResponses);
+  app.get('/surveys/:id/surveyComponents', isLoggedIn, dbSurveyComponent.getSurveyComponents);
 
   app.post('/surveys/:id/surveyComponents', isLoggedInWithAdminCheck, dbSurveyComponent.createSurveyComponent);
 

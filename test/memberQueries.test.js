@@ -130,13 +130,13 @@ describe('Project path test', () => {
   });
   test('Test DELETE method with non existing id', (done) => {
     request(app).delete('/projects/'+dummyProject.id+'/members/'+invalid_id).then((response) => {
-      expect(response.statusCode).toBe(404);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
   test('Test DELETE method with string id', (done) => {
     request(app).delete('/projects/'+dummyProject.id+'/members/'+string_id).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });

@@ -149,25 +149,25 @@ describe('Test /surveyItemLabels method root path', () => {
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
     request(app).put('/optionLabels/' + invalid_id).set('Accept', /json/).send({label_survey_item_option: {}}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
     request(app).put('/optionLabels/' + string_id).set('Accept', /json/).send({label_survey_item_option: {}}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
-  test('Test PUT with invalid id and empty user', (done) => {
+  test('Test PUT with invalid id and empty data', (done) => {
     request(app).put('/optionLabels/' + invalid_id).set('Accept', /json/).send({}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
-  test('Test PUT with string id and empty user', (done) => {
+  test('Test PUT with string id and empty data', (done) => {
     request(app).put('/optionLabels/' + string_id).set('Accept', /json/).send({}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
@@ -179,13 +179,13 @@ describe('Test /surveyItemLabels method root path', () => {
   });
   test('Test DELETE with invalid id', (done) => {
     request(app).delete('/optionLabels/' + invalid_id).then((response) => {
-      expect(response.statusCode).toBe(404);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
   test('Test DELETE with string id', (done) => {
     request(app).delete('/optionLabels/' + string_id).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });

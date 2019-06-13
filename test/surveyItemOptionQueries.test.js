@@ -13,7 +13,6 @@ const dummySurvey = require('./dummies.js').dummySurvey;
 const dummySurveyComponent = require('./dummies.js').dummySurveyComponent;
 const dummySurveyItem = require('./dummies.js').dummySurveyItem;
 const dummySurveyItemOption = require('./dummies.js').dummySurveyItemOption;
-const dummyIncompleteSurveyItemOption = require('./dummies.js').dummyIncompleteSurveyItemOption;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
@@ -145,25 +144,25 @@ describe('Test /surveyItemOptions method root path', () => {
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
     request(app).put('/options/' + invalid_id).set('Accept', /json/).send({survey_item_option: {}}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
     request(app).put('/options/' + string_id).set('Accept', /json/).send({survey_item_option: {}}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
-  test('Test PUT with invalid id and empty user', (done) => {
+  test('Test PUT with invalid id and empty data', (done) => {
     request(app).put('/options/' + invalid_id).set('Accept', /json/).send({}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
-  test('Test PUT with string id and empty user', (done) => {
+  test('Test PUT with string id and empty data', (done) => {
     request(app).put('/options/' + string_id).set('Accept', /json/).send({}).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
@@ -175,13 +174,13 @@ describe('Test /surveyItemOptions method root path', () => {
   });
   test('Test DELETE with invalid id', (done) => {
     request(app).delete('/options/' + invalid_id).then((response) => {
-      expect(response.statusCode).toBe(404);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });
   test('Test DELETE with string id', (done) => {
     request(app).delete('/options/' + string_id).then((response) => {
-      expect(response.statusCode).toBe(400);
+      expect(response.statusCode).toBe(403);
       done();
     });
   });

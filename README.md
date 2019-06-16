@@ -1,21 +1,67 @@
-This repo contains the js code in order to manage the CGA web-app and react-native app.
+# cga-api 
+[![Build Status](https://travis-ci.com/TrentoCrowdAI/cga-api.svg?branch=master)](https://travis-ci.com/TrentoCrowdAI/cga-api)
 
+## Content
+This repo contains the js code in order to manage the CGA web-app and react-native app.
+```
 ├── server
 │   ├── controllers
 │   │       └── apis
 │   │           ├── dataCollections.js
-│   │           ├── project.js
-│   │           └── user.js
+│   │           ├── members.js
+│   │           ├── projects.js
+│   │           ├── roles.js
+│   │           ├── subjects.js
+│   │           ├── surveyComponentResponses.js
+│   │           ├── surveyComponents.js
+│   │           ├── surveyItemLabels.js
+│   │           ├── surveyItemOptions.js
+│   │           ├── surveyItemResponses.js
+│   │           ├── surveyItems.js
+│   │           ├── surveyResponses.js
+│   │           ├── surveys.js
+│   │           └── users.js
 │   └── db
+│   │   ├── collectionRoleQueries.js
 │   │   ├── connection.js
 │   │   ├── dataCollectionQueries.js
 │   │   ├── memberQueries.js
 │   │   ├── projectQueries.js
+│   │   ├── roleQueries.js
+│   │   ├── subjectQueries.js
+│   │   ├── surveyComponentQueries.js
+│   │   ├── surveyComponentResponseQueries.js
+│   │   ├── surveyItemLabelQueries.js
+│   │   ├── surveyItemOptionLabelQueries.js
+│   │   ├── surveyItemOptionQueries.js
+│   │   ├── surveyItemQueries.js
+│   │   ├── surveyItemResponseQueries.js
+│   │   ├── surveyQueries.js
+│   │   ├── surveyResponseQueries.js
 │   │   └── userQueries.js
+│   ├── app.js
 │   ├── config.js
-│   ├── server.js
-│   └── utilities.js
+│   ├── utilities.js
+│   └── test
+│       ├── dataCollectionQueries.test.js
+│       ├── dummies.js
+│       ├── memberQueries.test.js
+│       ├── projectQueries.test.js
+│       ├── roleQueries.test.js
+│       ├── subjectQueries.test.js
+│       ├── surveyComponentQueries.test.js
+│       ├── surveyComponentResponseQueries.test.js
+│       ├── surveyItemLabelQueries.test.js
+│       ├── surveyItemOptionLabelQueries.test.js
+│       ├── surveyItemOptionQueries.test.js
+│       ├── surveyItemQueries.test.js
+│       ├── surveyItemResponseQueries.test.js
+│       ├── surveyQueries.test.js
+│       ├── surveyResponseQueries.test.js
+│       └── userQueries.test.js
 ├── package.json
-├── package-lock.json
 ├── Procfile
-└── README.md
+├── README.md
+├── ScriptDbCreation.txt
+└── server.js
+```

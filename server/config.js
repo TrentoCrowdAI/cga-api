@@ -1,6 +1,6 @@
 const google = {
-  clientID: '668909380264-t8nb3jvgq225i80lap6mssnghiv9rmh5.apps.googleusercontent.com',
-  clientSecret: '6J4w9VzHNx_TnbdRqRMtaVzO',
-  callbackURL: 'http://localhost:3000/auth/google/callback',
+  clientID: '375130727784-ru7k15bfcvm5in08c9jb20dd6fk65cr7.apps.googleusercontent.com',
+  clientSecret: 'UqzmHKAXf-J6-WbABZaQHAZa',
+  callbackURL: 'http://cga-api.herokuapp.com/auth/google/callback',
 };
 module.exports = {google};

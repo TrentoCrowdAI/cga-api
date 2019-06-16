@@ -47,7 +47,7 @@ app.get('/auth/google', passport.authenticate('google', {scope: ['profile'] }));
 app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/google'}),(req, res) => {
   console.log(req.user);
   req.session.user = req.user;
-  res.redirect("OAuthLogin://login?user=${JSON.stringify(req.user)}");
+  res.redirect(`OAuthLogin://login?user=${JSON.stringify(req.user)}`);
 });
 
 app.get('/logout', function(req, res){

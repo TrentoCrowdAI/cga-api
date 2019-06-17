@@ -22,13 +22,18 @@ const createUser = (request, response) => {
                 console.log(error);
                 response.status(500).send("Internal Server Error");
               }else{
-                response.status(201).json({"id": id});
-                //response.redirect("OAuthLogin://login?user=${JSON.stringify(req.session.user)}");//comment for test
+                if(process.env.NODE_ENV === 'test'){
+                  response.status(201).json({"id": id});
+                }
+                response.redirect("OAuthLogin://login?user=${JSON.stringify(req.session.user)}");//comment for test
               }
             }
           );
         }else{
-          response.status(200).json(results.rows);
+          if(process.env.NODE_ENV === 'test'){
+            response.status(200).json(results.rows);
+          }
+          response.redirect("OAuthLogin://login?user=${JSON.stringify(req.session.user)}");//comment for test
         }
       }
     );

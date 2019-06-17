@@ -63,7 +63,7 @@ app.get('/auth/google/callback', passport.authenticate('google', {failureRedirec
   console.log(req.user);
   req.session.user = req.user;
   dbUser.createUser(req, res);
-  res.redirect(`OAuthLogin://login?user=${JSON.stringify(req.user)}`);
+  //res.redirect(`OAuthLogin://login?user=${JSON.stringify(req.user)}`);
 });
 
 app.get('/logout', function(req, res){

@@ -5,6 +5,8 @@
 This repo contains the js code in order to manage the CGA web-app and react-native app.
 ```
 ├── server
+│   └── server.js
+├── src
 │   ├── controllers
 │   │       └── apis
 │   │           ├── dataCollections.js
@@ -62,6 +64,5 @@ This repo contains the js code in order to manage the CGA web-app and react-nati
 ├── package.json
 ├── Procfile
 ├── README.md
-├── ScriptDbCreation.txt
-└── server.js
+└── ScriptDbCreation.txt
 ```

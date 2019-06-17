@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "start": "node_modules/nodemon/bin/nodemon.js -- node_modules/babel-cli/bin/babel-node.js server/server.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "start:local": "export $(cat .env) && node_modules/nodemon/bin/nodemon.js -- node_modules/babel-cli/bin/babel-node.js server/server.js"
   },
   "jest": {
     "verbose": true,

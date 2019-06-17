@@ -40,7 +40,7 @@ describe('Test /users method root path', () => {
   test('Test POST method', (done) => {//N.B. the post will always have session values given that google will provide that
     request(app).post('/users').set('Accept', /json/).send({user: dummyUser}).then((response) => {
       expect(response.statusCode).toBe(201);
-      expect(response.body.id).toBe(dummyUser.id);
+      expect(response.body.user.id).toBe(dummyUser.id);
       done();
     });
   });

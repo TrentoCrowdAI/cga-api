@@ -16,24 +16,26 @@ const createUser = (request, response) => {
           response.status(500).send("Internal Server Error");
         }
         if(results.rowCount == 0){
-          pool.query('INSERT INTO "user" (id, name, surname) VALUES ($1, $2, $3)', 
+          pool.query('INSERT INTO "user" (id, name, surname) VALUES ($1, $2, $3) RETURNING *', 
             [id, name, surname], (error, results) => {
               if (error) {
                 console.log(error);
                 response.status(500).send("Internal Server Error");
               }else{
                 if(process.env.NODE_ENV === 'test'){
-                  response.status(201).json({"id": id});
+                  response.status(201).json({"user": results.rows[0]});
+                }else{
+                  response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
                 }
-                response.redirect("OAuthLogin://login?user=${JSON.stringify(req.session.user)}");//comment for test
               }
             }
           );
         }else{
           if(process.env.NODE_ENV === 'test'){
-            response.status(200).json(results.rows);
+            response.status(200).json({"user": results.rows[0]});
+          }else{
+            response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
           }
-          response.redirect("OAuthLogin://login?user=${JSON.stringify(req.session.user)}");//comment for test
         }
       }
     );

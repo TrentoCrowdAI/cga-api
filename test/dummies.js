@@ -46,6 +46,11 @@ let dummySurveyItem = {
   type: 'aaaa',
 };
 
+let dummySurveyItemImage = {
+  link: 'abcdefghilmnopqrstuz.g.com',
+  title: 'title'
+};
+
 let dummySurveyItemOption = {
   value: 'ABC',
   type: 'prova',
@@ -100,4 +105,4 @@ let string_id = "AAAA";
 
 module.exports = {string_id, invalid_id, dummyUser, adminRole, adminUser, dummyProject, dummyDataCollection,
   dummySurvey, dummySurveyComponent, dummySurveyItem,  dummySurveyItemOption,  dummySurveyItemOptionLabel, 
-  dummySurveyItemLabel, dummySubject,  dummyRole, dummyMember,  dummyResponse, dummyComponentResponse, dummyItemResponse};
+  dummySurveyItemLabel, dummySubject,  dummyRole, dummyMember,  dummyResponse, dummyComponentResponse, dummyItemResponse, dummySurveyItemImage};

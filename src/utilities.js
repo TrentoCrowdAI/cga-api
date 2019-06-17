@@ -223,6 +223,34 @@ async function adminCheck(request, response, next){
         }
       );
     }
+  }else if(request.path.includes("/images/") || request.body.image_survey_item != null){
+    var image_survey_item_id;
+    if(request.params.id != undefined){
+      image_survey_item_id = request.params.id;
+    }else if(request.body.image_survey_item != null){
+      if(request.body.image_survey_item.id != null){
+        image_survey_item_id = request.body.image_survey_item.id;
+      }
+    }
+
+    if(isNaN(image_survey_item_id)){
+      response.status(403).json('Permission Denied');
+    }else{
+      pool.query('SELECT * FROM role WHERE id IN (SELECT role_id FROM member WHERE user_id = $1 AND project_id IN (SELECT project_id FROM data_collection WHERE id IN (SELECT data_collection_id FROM survey WHERE id IN (SELECT survey_id FROM survey_component WHERE id IN (SELECT survey_component_id FROM survey_item WHERE id IN (SELECT survey_item_id from image_survey_item WHERE id = $2))))))', 
+        [request.session.user.id, image_survey_item_id], (error, results) => {
+          if (error) {
+            console.log(error);
+            response.status(500).send("Internal Server Error");
+          }else if(results.rows[0] != null){
+            if(results.rows[0].name != null && results.rows[0].name == 'ADMIN'){
+              next();
+            }
+          }else{
+            response.status(403).json('Permission Denied');
+          }
+        }
+      );
+    }
   }else if(request.path.includes("/options/") || request.body.survey_item_option != null){
     var survey_item_option_id;
     if(request.params.id != undefined){

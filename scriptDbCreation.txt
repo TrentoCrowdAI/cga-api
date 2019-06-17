@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS survey_component_response;
 DROP TABLE IF EXISTS label_survey_item_option;
 DROP TABLE IF EXISTS survey_item_option;
 DROP TABLE IF EXISTS label_survey_item;
+DROP TABLE IF EXISTS image_survey_item;
 DROP TABLE IF EXISTS survey_item;
 DROP TABLE IF EXISTS survey_response;
 DROP TABLE IF EXISTS survey_component;
@@ -77,6 +78,13 @@ CREATE TABLE label_survey_item(
  id SERIAL PRIMARY KEY NOT NULL,
  language VARCHAR (45) NOT NULL,
  content VARCHAR (100) NOT NULL,
+ survey_item_id INTEGER NOT NULL REFERENCES survey_item(id)
+);
+
+CREATE TABLE image_survey_item(
+ id SERIAL PRIMARY KEY NOT NULL,
+ link VARCHAR (300) NOT NULL,
+ title VARCHAR (100) NOT NULL,
  survey_item_id INTEGER NOT NULL REFERENCES survey_item(id)
 );
 

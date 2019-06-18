@@ -50,6 +50,7 @@ describe('Test /users method root path', () => {
       expect(response.body[0].id).toBe(dummyUser.id);
       expect(response.body[0].name).toBe(dummyUser.name);
       expect(response.body[0].surname).toBe(dummyUser.surname);
+      expect(response.body[0].avatar).toBe(dummyUser.avatar);
       done();
     });
   });
@@ -71,6 +72,7 @@ describe('Test /users method root path', () => {
       expect(response.body[0].id).toBe(dummyUser.id);
       expect(response.body[0].name).toBe(dummyUser.name);
       expect(response.body[0].surname).toBe(dummyUser.surname);
+      expect(response.body[0].avatar).toBe(dummyUser.avatar);
       done();
     });
   });

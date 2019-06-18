@@ -8,6 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
+const session = require('express-session');
 // Import Google OAuth apps config
 const {google} = require('./config');
 const dbUser = require('./db/userQueries');
@@ -18,7 +19,7 @@ const transformGoogleProfile = (profile) => {
     return ({
         name: profile.given_name,
         surname: profile.family_name,
-        //avatar: profile.picture ? profile.picture : 'http://2.citynews-today.stgy.ovh/~media/original-hi/24353835697500/cane-12-10.jpg',
+        avatar: profile.picture ? profile.picture : 'http://2.citynews-today.stgy.ovh/~media/original-hi/24353835697500/cane-12-10.jpg',
         id: profile.sub ? profile.sub : null,
     });
 }
@@ -52,6 +53,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(session({  
+  secret: process.env.SESSION_SECRET || 'default_session_secret',
+  resave: false,
+  saveUninitialized: false,
+}));
 // Inzialize passport 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -59,11 +65,10 @@ app.use(passport.session());
 // Set up Google auth routes
 app.get('/auth/google', passport.authenticate('google', {scope: ['profile'] }));
 
-app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/google'}),(req, res) => {
+app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/google', session: true}),(req, res) => {
   console.log(req.user);
   req.session.user = req.user;
   dbUser.createUser(req, res);
-  //res.redirect(`OAuthLogin://login?user=${JSON.stringify(req.user)}`);
 });
 
 app.get('/logout', function(req, res){

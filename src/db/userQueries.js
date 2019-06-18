@@ -5,10 +5,11 @@
 
 const connection = require('./connection');
 const pool = connection.pool;
+var Cookies = require('cookies');
 
 const createUser = (request, response) => {
   if(request.session.user != null && request.session.user.name != null && request.session.user.surname != null){ 
-    const { id, name, surname } = request.session.user;
+    const { id, name, surname, avatar } = request.session.user;
     pool.query('SELECT * FROM "user" WHERE id = $1', 
       [id], (error, results) => {
         if (error) {
@@ -16,8 +17,8 @@ const createUser = (request, response) => {
           response.status(500).send("Internal Server Error");
         }
         if(results.rowCount == 0){
-          pool.query('INSERT INTO "user" (id, name, surname) VALUES ($1, $2, $3) RETURNING *', 
-            [id, name, surname], (error, results) => {
+          pool.query('INSERT INTO "user" (id, name, surname, avatar) VALUES ($1, $2, $3, $4) RETURNING *', 
+            [id, name, surname, avatar], (error, results) => {
               if (error) {
                 console.log(error);
                 response.status(500).send("Internal Server Error");
@@ -25,7 +26,11 @@ const createUser = (request, response) => {
                 if(process.env.NODE_ENV === 'test'){
                   response.status(201).json({"user": results.rows[0]});
                 }else{
-                  response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
+                  var cookies = new Cookies(request, response);
+                  var sessionCookie = cookies.get('connect.sid');
+                  console.log(sessionCookie);
+                  response.status(201).json({"user": results.rows[0]});
+                  //response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
                 }
               }
             }
@@ -34,7 +39,11 @@ const createUser = (request, response) => {
           if(process.env.NODE_ENV === 'test'){
             response.status(200).json({"user": results.rows[0]});
           }else{
-            response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
+            var cookies = new Cookies(request, response);
+            var sessionCookie = cookies.get('connect.sid');
+            console.log(sessionCookie);
+            response.status(200).json({"user": results.rows[0]});
+            //response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
           }
         }
       }
@@ -80,11 +89,11 @@ const updateUser = (request, response) => {
   var id = request.params.id;
   var isNumber =  /^\d+$/.test(id);
   if(id != null && isNumber){
-    if(request.body.user != null && request.body.user.name != null && request.body.user.surname != null){
-      const { name, surname } = request.body.user;
+    if(request.body.user != null && request.body.user.name != null && request.body.user.surname != null && request.body.user.avatar != null){
+      const { name, surname, avatar } = request.body.user;
       pool.query(
-        'UPDATE "user" SET name = $1, surname = $2 WHERE id = $3 RETURNING *',
-        [name, surname, id], (error, results) => {
+        'UPDATE "user" SET name = $1, surname = $2, avatar = $3 WHERE id = $4 RETURNING *',
+        [name, surname, avatar, id], (error, results) => {
           if (error) {
             console.log(error);
             response.status(500).send("Internal Server Error");

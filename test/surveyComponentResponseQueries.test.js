@@ -61,9 +61,11 @@ afterAll(async () => {
         await request(app).delete('/surveyComponents/' + dummySurveyComponent.id).then(async () => {
           await request(app).delete('/surveys/' + dummySurvey.id).set('Accept', /json/).send({survey: dummySurvey}).then(async () => {
             await request(app).delete('/dataCollections/' + dummyDataCollection.id).set('Accept', /json/).send({data_collection: dummyDataCollection}).then(async () => {
-              await request(app).delete('/projects/' + dummyProject.id).then(async () => {
-                await request(app).delete('/users/' + dummyUser.id).then(async () => {
-                  await request(app).delete('/roles/' + adminRole.id);
+              await request(app).delete('/projects/'+dummyProject.id+"/members/"+dummyUser.id).then(async () => {
+                await request(app).delete('/projects/' + dummyProject.id).then(async () => {
+                  await request(app).delete('/users/' + dummyUser.id).then(async () => {
+                    await request(app).delete('/roles/' + adminRole.id);
+                  });
                 });
               });
             });

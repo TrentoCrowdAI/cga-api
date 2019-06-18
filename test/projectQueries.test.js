@@ -8,6 +8,7 @@ const string_id = require('./dummies.js').string_id;
 const dummyProject = require('./dummies.js').dummyProject;
 const adminRole = require('./dummies.js').adminRole;
 const dummyUser = require('./dummies.js').dummyUser;
+dummyProject.user_id = dummyUser.id;
 
 beforeAll(async (done) => {
   process.env.NODE_ENV = 'test';
@@ -48,6 +49,7 @@ describe('Project path test', () => {
     request(app).post('/projects').set('Accept', /json/).send({project: dummyProject}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummyProject.id = response.body.id;
+      dummyProject.creation_date = response.body.creation_date;
       done();
     });
   });
@@ -113,10 +115,12 @@ describe('Project path test', () => {
       done();
     });
   });
-  test('Test DELETE method with dummyProjectId', (done) => {
-    request(app).delete('/projects/'+dummyProject.id).then((response) => {
-      expect(response.statusCode).toBe(204);
-      done();
+  test('Test DELETE method with dummyProjectId', async(done) => {
+    await request(app).delete('/projects/'+dummyProject.id+"/members/"+dummyUser.id).then(async () => {
+      await request(app).delete('/projects/'+dummyProject.id).then((response) => {
+        expect(response.statusCode).toBe(204);
+        done();
+      });
     });
   });
   test('Test DELETE method with non existing id', (done) => {

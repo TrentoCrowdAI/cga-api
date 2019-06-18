@@ -29,8 +29,9 @@ const createUser = (request, response) => {
                   var cookies = new Cookies(request, response);
                   var sessionCookie = cookies.get('connect.sid');
                   console.log(sessionCookie);
-                  response.status(201).json({"user": results.rows[0]});
-                  //response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
+                  results.rows[0].accessToken = sessionCookie;
+                  console.log(results.rows[0]);
+                  response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
                 }
               }
             }
@@ -42,8 +43,9 @@ const createUser = (request, response) => {
             var cookies = new Cookies(request, response);
             var sessionCookie = cookies.get('connect.sid');
             console.log(sessionCookie);
-            response.status(200).json({"user": results.rows[0]});
-            //response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
+            results.rows[0].accessToken = sessionCookie;
+            console.log(results.rows[0]);
+            response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
           }
         }
       }

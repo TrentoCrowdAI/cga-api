@@ -6,6 +6,25 @@
 const connection = require('./connection');
 const pool = connection.pool;
 
+const getSurveys = (request, response) => {
+  var data_collection_id = parseInt(request.params.id1);
+  var subject_id = parseInt(request.params.id2);
+  if(data_collection_id != undefined && !isNaN(data_collection_id) && subject_id != undefined && !isNaN(subject_id)){
+    pool.query('SELECT * FROM survey_response SR, survey S WHERE SR.survey_id = S.id AND SR.subject_id = $1 AND SR.survey_id IN (SELECT id FROM survey WHERE data_collection_id = $2) ORDER BY S.name ASC', 
+      [subject_id, data_collection_id], (error, results) => {
+        if (error) {
+          console.log(error);
+          response.status(500).send("Internal Server Error");
+        }else{
+          response.status(200).json(results.rows);
+        }
+      }
+    );
+  }else{
+    response.status(400).send("Invalid id");
+  }
+};
+
 const getProjectDataCollections = (request, response) => {
   var project_id = parseInt(request.params.id);
   if(project_id != undefined && !isNaN(project_id)){
@@ -151,6 +170,7 @@ const deleteDataCollection = (request, response) => {
 }
 
 module.exports = {
+  getSurveys,
   getProjectDataCollections,
   getDataCollectionSubjects,
   getDataCollectionById,

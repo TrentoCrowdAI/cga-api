@@ -16,6 +16,8 @@ exports.init = function (app) {
 
   app.delete('/dataCollections/:id', isLoggedInWithAdminCheck, dbDataCollection.deleteDataCollection);
 
+  app.get('/dataCollections/:id1/subjects/:id2/surveys', isLoggedInWithAdminCheck, dbDataCollection.getSurveys);
+
   app.get('/dataCollections/:id/surveys', isLoggedIn, dbSurvey.getSurveys);
 
   app.post('/dataCollections/:id/surveys', isLoggedInWithAdminCheck, dbSurvey.createSurvey);

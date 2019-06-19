@@ -16,4 +16,5 @@ exports.init = function (app) {
   app.put('/subjects/:id', isLoggedIn, dbSubject.updateSubject);
 
   app.delete('/subjects/:id', isLoggedIn, dbSubject.deleteSubject);
+  
 };

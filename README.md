@@ -1,5 +1,4 @@
 # cga-api 
-[![Build Status](https://travis-ci.com/TrentoCrowdAI/cga-api.svg?branch=master)](https://travis-ci.com/TrentoCrowdAI/cga-api)
 
 ## Content
 This repo contains the js code in order to manage the CGA web-app and react-native app.

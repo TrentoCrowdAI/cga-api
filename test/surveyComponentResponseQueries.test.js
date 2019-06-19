@@ -32,6 +32,7 @@ beforeAll(async () => {
             dummyResponse.survey_id = response.body.id;
             await request(app).post('/surveys/' + dummySurvey.id + "/surveyComponents").set('Accept', /json/).send({survey_component: dummySurveyComponent}).then(async (response) => {
               dummySurveyComponent.id = response.body.id;
+              dummyComponentResponse.survey_component_id = response.body.id;
               dummySurveyItem.survey_component_id = response.body.id;
               await request(app).post('/surveyComponents/' + dummySurveyComponent.id + "/surveyItems").set('Accept', /json/).send({survey_item: dummySurveyItem}).then(async (response) => {
                 dummySurveyItem.id = response.body.id;
@@ -100,7 +101,7 @@ describe('Test /responses/:id/componentResponses method root path', () => {
     });
   });
   test('Test POST method', (done) => {
-    request(app).post('/responses/' + dummyResponse.id + "/user").set('Accept', /json/).send({user: dummyUser}).then((response) => {
+    request(app).post('/responses/' + dummyResponse.id + "/componentResponses").set('Accept', /json/).send({survey_component_response: dummyComponentResponse}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummyComponentResponse.id = response.body[0].id;
       dummyComponentResponse.status = response.body[0].status;
@@ -111,13 +112,13 @@ describe('Test /responses/:id/componentResponses method root path', () => {
     });
   });
   test('Test POST method without data', (done) => {
-    request(app).post('/responses/' + dummyComponentResponse.id + "/user").set('Accept', /json/).send({}).then((response) => {
+    request(app).post('/responses/' + dummyComponentResponse.id + "/componentResponses").set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/responses/' + dummyComponentResponse.id + "/user").set('Accept', /json/).send({user: {}}).then((response) => {
+    request(app).post('/responses/' + dummyComponentResponse.id + "/componentResponses").set('Accept', /json/).send({user: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

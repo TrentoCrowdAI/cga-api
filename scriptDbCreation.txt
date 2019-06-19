@@ -125,7 +125,8 @@ CREATE TABLE survey_component_response (
   status VARCHAR(45) NOT NULL,
   creation_date TIMESTAMP(2) NOT NULL,
   survey_response_id INTEGER NOT NULL REFERENCES survey_response(id),
-  user_id VARCHAR(30) NOT NULL REFERENCES "user"(id)
+  user_id VARCHAR(30) NOT NULL REFERENCES "user"(id),
+  survey_component_id INTEGER NOT NULL REFERENCES survey_component(id)
 );
 
 CREATE TABLE survey_item_response (

@@ -10,8 +10,8 @@ const getSurveys = (request, response) => {
   var data_collection_id = parseInt(request.params.id1);
   var subject_id = parseInt(request.params.id2);
   if(data_collection_id != undefined && !isNaN(data_collection_id) && subject_id != undefined && !isNaN(subject_id)){
-    pool.query('SELECT * FROM survey_response SR, survey S WHERE SR.survey_id = S.id AND SR.subject_id = $1 AND SR.survey_id IN (SELECT id FROM survey WHERE data_collection_id = $2) ORDER BY S.name ASC', 
-      [subject_id, data_collection_id], (error, results) => {
+    pool.query('SELECT * FROM survey_component_response WHERE status = \'incomplete\' AND user_id = $1 AND survey_response_id IN (SELECT id FROM survey_response WHERE subject_id = $2 AND survey_id IN (SELECT id FROM survey WHERE data_collection_id = $3))', 
+      [request.session.user.id, subject_id, data_collection_id], (error, results) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");
@@ -47,8 +47,8 @@ const getDataCollectionSubjects = (request, response) => {
   var data_collection_id = parseInt(request.params.id);
   
   if(data_collection_id != undefined && !isNaN(data_collection_id)){
-    pool.query('SELECT * FROM subject where id IN (SELECT subject_id FROM survey_response WHERE survey_id IN (SELECT id FROM survey WHERE data_collection_id = $1))', 
-      [data_collection_id], (error, results) => {
+    pool.query('SELECT * FROM subject WHERE id IN (SELECT subject_id FROM survey_response SR, survey_component_response SCR WHERE SR.id = SCR.survey_response_id AND SCR.status = \'incomplete\' AND SCR.user_id = $1 AND survey_id IN (SELECT id FROM survey WHERE data_collection_id = $2))', 
+      [request.session.user.id, data_collection_id], (error, results) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");

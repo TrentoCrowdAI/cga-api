@@ -17,6 +17,6 @@ exports.init = function (app) {
 
   app.get('/responses/:id/componentResponses', isLoggedIn, dbSurveyComponentResponse.getSurveyComponentResponses);
 
-  app.post('/responses/:id/user', isLoggedIn, dbSurveyComponentResponse.createSurveyComponentResponse);
+  app.post('/responses/:id/componentResponses', isLoggedIn, dbSurveyComponentResponse.createSurveyComponentResponse);
 
 };

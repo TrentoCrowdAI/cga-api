@@ -24,6 +24,27 @@ const getProjectDataCollections = (request, response) => {
   }
 };
 
+const getDataCollectionSubjects = (request, response) => {
+  var data_collection_id = parseInt(request.params.id);
+  
+  if(data_collection_id != undefined && !isNaN(data_collection_id)){
+    pool.query('SELECT * FROM subject where id IN (SELECT subject_id FROM survey_response WHERE survey_id IN (SELECT id FROM survey WHERE data_collection_id = $1))', 
+      [data_collection_id], (error, results) => {
+        if (error) {
+          console.log(error);
+          response.status(500).send("Internal Server Error");
+        }else if(results.rowCount == 0){
+          response.status(404).send("Subjects not found");
+        }else{
+          response.status(200).json(results.rows);
+        }
+      }
+    );
+  }else{
+    response.status(400).send("Invalid Id");
+  }
+}
+
 const createDataCollection = (request, response) => {
   var project_id = parseInt(request.params.id);
 
@@ -131,6 +152,7 @@ const deleteDataCollection = (request, response) => {
 
 module.exports = {
   getProjectDataCollections,
+  getDataCollectionSubjects,
   getDataCollectionById,
   createDataCollection,
   updateDataCollection,

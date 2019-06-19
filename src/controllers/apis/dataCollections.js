@@ -20,4 +20,6 @@ exports.init = function (app) {
 
   app.post('/dataCollections/:id/surveys', isLoggedInWithAdminCheck, dbSurvey.createSurvey);
 
+  app.get('/dataCollections/:id/subjects', isLoggedIn, dbDataCollection.getDataCollectionSubjects);
+
 };

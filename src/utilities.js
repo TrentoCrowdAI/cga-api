@@ -108,6 +108,7 @@ async function adminCheck(request, response, next){
     }
 
     if(isNaN(data_collection_id)){
+      console.log("A");
       response.status(403).json('Permission Denied');
     }else{
       pool.query('SELECT * FROM role WHERE id IN (SELECT role_id FROM member WHERE user_id = $1 AND project_id IN (SELECT project_id FROM data_collection WHERE id = $2))', 
@@ -120,6 +121,7 @@ async function adminCheck(request, response, next){
               next();
             }
           }else{
+            console.log("AA");
             response.status(403).json('Permission Denied');
           }
         }

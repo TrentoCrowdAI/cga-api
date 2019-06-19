@@ -7,8 +7,8 @@ const connection = require('./connection');
 const pool = connection.pool;
 
 const getProjects = (request, response) => {
-  pool.query('SELECT * FROM project ORDER BY id ASC', 
-    (error, results) => {
+  pool.query('SELECT * FROM project WHERE id IN (SELECT project_id FROM member WHERE user_id = $1) ORDER BY id ASC', 
+    [request.session.user.id], (error, results) => {
       if (error) {
         console.log(error);
         response.status(400).send("Bad Request");

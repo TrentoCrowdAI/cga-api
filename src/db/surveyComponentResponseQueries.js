@@ -51,7 +51,7 @@ const createSurveyComponentResponse = (request, response) => {
   if(survey_response_id != undefined && !isNaN(survey_response_id)){
     if(request.body.survey_component_response != null && request.body.survey_component_response.user_id != null){
       var isNumber =  /^\d+$/.test(request.body.survey_component_response.user_id);
-      if(isNumber && request.body.survey_component_response.survey_component_id != null){
+      if(isNumber && request.body.survey_component_response.survey_component_id != null && !isNaN(request.body.survey_component_response.survey_component_id)){
         const user_id = request.body.survey_component_response.user_id;
         const survey_component_id = request.body.survey_component_response.survey_component_id;
         pool.query('INSERT INTO survey_component_response (status, creation_date, user_id, survey_response_id, survey_component_id) VALUES (\'incomplete\', NOW(), $1, $2, $3) RETURNING *', 

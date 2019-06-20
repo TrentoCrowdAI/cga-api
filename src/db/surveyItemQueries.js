@@ -11,12 +11,60 @@ const getSurveyItems = (request, response) => {
   
   if(survey_component_id != undefined && !isNaN(survey_component_id)){
     pool.query('SELECT * FROM survey_item WHERE survey_component_id = $1 ORDER BY id ASC', 
-      [survey_component_id], (error, results) => {
+      [survey_component_id], (error, resultsItem) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");
         }else{
-          response.status(200).json(results.rows);
+          
+          for(var i = 0; i < resultsItem.rows.lenght; i++){
+            //loading images
+            pool.query('SELECT * FROM image_survey_item WHERE survey_item_id = $1 ORDER BY id ASC', 
+              [resultsItem.rows[i].id], (error, resultsImages) => {
+                if (error) {
+                  console.log(error);
+                }else{
+                  resultsItem.rows[i].images = resultsImages.rows;
+                }
+              }
+            );
+
+            //loading labels
+            pool.query('SELECT * FROM label_survey_item WHERE survey_item_id = $1 ORDER BY id ASC', 
+              [resultsItem.rows[i].id], (error, resultLabels) => {
+                if (error) {
+                  console.log(error);
+                }else{
+                  resultsItem.rows[i].labels = resultLabels.rows;
+                }
+              }
+            );
+
+            //loading options
+            pool.query('SELECT * FROM survey_item_option WHERE id = $1', 
+              [survey_item_id], (error, resultOptions) => {
+                if (error) {
+                  console.log(error);
+                }else{
+                  for(var i = 0; i < resultOptions.rows.lenght; i++){
+                    //loading options label
+                    pool.query('SELECT * FROM label_survey_item_option WHERE id = $1', 
+                      [resultOptions.rows[i].id], (error, resultOptionLabels) => {
+                        if (error) {
+                          console.log(error);
+                        }else {
+                          resultOptions.rows[i].labels = resultOptionLabels.rows
+                        }
+                      }
+                    );
+                  }
+                  resultsItem.rows[i].labels = resultOptions.rows;
+                }
+              }
+            );
+
+            response.status(200).json(resultsItem.rows);
+          }
         }
       }
     );

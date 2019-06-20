@@ -30,14 +30,24 @@ const getSurveyItemOptionById = (request, response) => {
   
   if(survey_item_id != undefined && !isNaN(survey_item_id)){
     pool.query('SELECT * FROM survey_item_option WHERE id = $1', 
-      [survey_item_id], (error, results) => {
+      [survey_item_id], (error, resultOptions) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");
-        }else if(results != undefined && results.rowCount == 0){
-          response.status(404).send("SurveyItemOption not found");
         }else{
-          response.status(200).json(results.rows);
+          for(var i = 0; i < resultOptions.rows.lenght; i++){
+            //loading options label
+            pool.query('SELECT * FROM label_survey_item_option WHERE id = $1', 
+              [resultOptions.rows[i].id], (error, resultOptionLabels) => {
+                if (error) {
+                  console.log(error);
+                }else {
+                  resultOptions.rows[i].labels = resultOptionLabels.rows
+                }
+              }
+            );
+          }
+          response.status(200).json(resultOptions.rows);
         }
       }
     );

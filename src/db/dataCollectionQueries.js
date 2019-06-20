@@ -47,7 +47,7 @@ const getDataCollectionSubjects = (request, response) => {
   var data_collection_id = parseInt(request.params.id);
   
   if(data_collection_id != undefined && !isNaN(data_collection_id)){
-    pool.query('SELECT * FROM subject WHERE id IN (SELECT subject_id FROM survey_response SR, survey_component_response SCR WHERE SR.id = SCR.survey_response_id AND SCR.status = \'incomplete\' AND SCR.user_id = $1 AND survey_id IN (SELECT id FROM survey WHERE data_collection_id = $2))', 
+    pool.query('SELECT S.id, S.name, S.surname, S.contact, S.location, SR.creation_date, SR.status FROM survey_response SR, survey_component_response SCR, subject S WHERE SR.id = SCR.survey_response_id AND SR.subject_id = S.id AND SCR.user_id = $1 AND survey_id IN (SELECT id FROM survey WHERE data_collection_id = $2)', 
       [request.session.user.id, data_collection_id], (error, results) => {
         if (error) {
           console.log(error);

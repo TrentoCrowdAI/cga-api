@@ -10,67 +10,109 @@ const getSurveyItems = (request, response) => {
   var survey_component_id = parseInt(request.params.id);
   
   if(survey_component_id != undefined && !isNaN(survey_component_id)){
+    getItems(survey_component_id).then((result) => {
+      response.status(200).json(result);
+    });
+  }else{
+    response.status(400).json("Invalid id");
+  }
+}
+
+function getItems(survey_component_id){
+  return new Promise((resolve, reject) => {
     pool.query('SELECT * FROM survey_item WHERE survey_component_id = $1 ORDER BY id ASC', 
       [survey_component_id], (error, resultsItem) => {
         if (error) {
           console.log(error);
-          response.status(500).send("Internal Server Error");
         }else{
-          
-          for(var i = 0; i < resultsItem.rows.lenght; i++){
-            //loading images
-            pool.query('SELECT * FROM image_survey_item WHERE survey_item_id = $1 ORDER BY id ASC', 
-              [resultsItem.rows[i].id], (error, resultsImages) => {
-                if (error) {
-                  console.log(error);
-                }else{
-                  resultsItem.rows[i].images = resultsImages.rows;
-                }
-              }
-            );
-
-            //loading labels
-            pool.query('SELECT * FROM label_survey_item WHERE survey_item_id = $1 ORDER BY id ASC', 
-              [resultsItem.rows[i].id], (error, resultLabels) => {
-                if (error) {
-                  console.log(error);
-                }else{
-                  resultsItem.rows[i].labels = resultLabels.rows;
-                }
-              }
-            );
-
-            //loading options
-            pool.query('SELECT * FROM survey_item_option WHERE id = $1', 
-              [survey_item_id], (error, resultOptions) => {
-                if (error) {
-                  console.log(error);
-                }else{
-                  for(var i = 0; i < resultOptions.rows.lenght; i++){
-                    //loading options label
-                    pool.query('SELECT * FROM label_survey_item_option WHERE id = $1', 
-                      [resultOptions.rows[i].id], (error, resultOptionLabels) => {
-                        if (error) {
-                          console.log(error);
-                        }else {
-                          resultOptions.rows[i].labels = resultOptionLabels.rows
-                        }
-                      }
-                    );
-                  }
-                  resultsItem.rows[i].labels = resultOptions.rows;
-                }
-              }
-            );
-
-            response.status(200).json(resultsItem.rows);
+          if(resultsItem.rows.length > 0){
+            let retVal = [];
+            let promiseVect = [];
+            for(var i = 0; i < resultsItem.rows.length; i++){
+              promiseVect.push(loadItem(i, resultsItem));
+            }
+            Promise.all(promiseVect).then((result) => retVal.push(result)).then((result) => resolve(retVal));
           }
         }
       }
     );
-  }else{
-    response.status(400).json("Invalid id");
-  }
+  });
+}
+
+function loadItem(i, resultsItem){
+  return new Promise((resolve, reject) => {
+    getImagesData(i, resultsItem).then((resultImages) => {
+      getLabelData(i, resultsItem).then((resultLabels) => {
+        getOptions(i, resultsItem).then((resultOption) => {
+          resultsItem.rows[i].images = resultImages; 
+          resultsItem.rows[i].labels = resultLabels;
+          resultsItem.rows[i].options = resultOption;
+          resolve(resultsItem.rows[i]);
+        });
+      });
+    });
+  });    
+}
+
+function getImagesData(i, resultsItem){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM image_survey_item WHERE survey_item_id = $1 ORDER BY id ASC', 
+      [resultsItem.rows[i].id], (error, resultsImages) => {
+        if (error) {
+          console.log(error);
+        }else{
+          resolve(resultsImages.rows);
+        }
+      }
+    );
+  });
+}
+
+function getLabelData(i, resultsItem){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM label_survey_item WHERE survey_item_id = $1 ORDER BY id ASC', 
+      [resultsItem.rows[i].id], (error, resultLabels) => {
+        if (error) {
+          console.log(error);
+        }else{
+          resolve(resultLabels.rows);
+        }
+      }
+    )
+  });
+}
+
+function getOptions(i, resultsItem){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM survey_item_option WHERE survey_item_id = $1', 
+      [resultsItem.rows[i].id], (error, resultOptions) => {
+        if (error) {
+          console.log(error);
+        }else{
+          let retVal = [];
+          let promiseVect = [];
+          for(var i = 0; i < resultOptions.rows.length; i++){
+            promiseVect.push(getOptionLabels(i, resultOptions));
+          }
+          Promise.all(promiseVect).then((result) => retVal.push(result)).then((result) => resolve(retVal));
+        }
+      }
+    );
+  });
+}
+
+function getOptionLabels(i, resultOptions){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM label_survey_item_option WHERE id = $1', 
+      [resultOptions.rows[i].id], (error, resultOptionLabels) => {
+        if (error) {
+          console.log(error);
+        }else {
+          resolve(resultOptionLabels.rows);
+        }
+      }
+    );
+  });
 }
 
 const getSurveyItemById = (request, response) => {

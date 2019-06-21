@@ -37,13 +37,113 @@ const getSurveyComponentById = (request, response) => {
         }else if(results != undefined && results.rowCount == 0){
           response.status(404).send("SurveyComponent not found");
         }else{
-          response.status(200).json(results.rows);
+          getItems(survey_component_id).then((result) => {
+            results.rows[0].items = result;
+            response.status(200).json(results.rows[0]);
+          });
         }
       }
     );
   }else{
     response.status(400).send("Invalid Id");
   }
+}
+
+function getItems(survey_component_id){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM survey_item WHERE survey_component_id = $1 ORDER BY id ASC', 
+      [survey_component_id], (error, resultsItem) => {
+        if (error) {
+          console.log(error);
+        }else{
+          if(resultsItem.rows.length > 0){
+            let retVal = [];
+            let promiseVect = [];
+            for(var i = 0; i < resultsItem.rows.length; i++){
+              promiseVect.push(loadItem(i, resultsItem));
+            }
+            Promise.all(promiseVect).then((result) => retVal.push(result)).then((result) => resolve(retVal));
+          }
+        }
+      }
+    );
+  });
+}
+
+function loadItem(i, resultsItem){
+  return new Promise((resolve, reject) => {
+    getImagesData(i, resultsItem).then((resultImages) => {
+      getLabelData(i, resultsItem).then((resultLabels) => {
+        getOptions(i, resultsItem).then((resultOption) => {
+          resultsItem.rows[i].images = resultImages; 
+          resultsItem.rows[i].labels = resultLabels;
+          resultsItem.rows[i].options = resultOption;
+          resolve(resultsItem.rows[i]);
+        });
+      });
+    });
+  });    
+}
+
+function getImagesData(i, resultsItem){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM image_survey_item WHERE survey_item_id = $1 ORDER BY id ASC', 
+      [resultsItem.rows[i].id], (error, resultsImages) => {
+        if (error) {
+          console.log(error);
+        }else{
+          resolve(resultsImages.rows);
+        }
+      }
+    );
+  });
+}
+
+function getLabelData(i, resultsItem){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM label_survey_item WHERE survey_item_id = $1 ORDER BY id ASC', 
+      [resultsItem.rows[i].id], (error, resultLabels) => {
+        if (error) {
+          console.log(error);
+        }else{
+          resolve(resultLabels.rows);
+        }
+      }
+    )
+  });
+}
+
+function getOptions(i, resultsItem){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM survey_item_option WHERE survey_item_id = $1', 
+      [resultsItem.rows[i].id], (error, resultOptions) => {
+        if (error) {
+          console.log(error);
+        }else{
+          let retVal = [];
+          let promiseVect = [];
+          for(var i = 0; i < resultOptions.rows.length; i++){
+            promiseVect.push(getOptionLabels(i, resultOptions));
+          }
+          Promise.all(promiseVect).then((result) => retVal.push(result)).then((result) => resolve(retVal));
+        }
+      }
+    );
+  });
+}
+
+function getOptionLabels(i, resultOptions){
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM label_survey_item_option WHERE survey_item_option_id = $1', 
+      [resultOptions.rows[i].id], (error, resultOptionLabels) => {
+        if (error) {
+          console.log(error);
+        }else {
+          resolve(resultOptionLabels.rows);
+        }
+      }
+    );
+  });
 }
 
 const createSurveyComponent = (request, response) => {

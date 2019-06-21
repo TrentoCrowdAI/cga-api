@@ -103,7 +103,7 @@ function getOptions(i, resultsItem){
 
 function getOptionLabels(i, resultOptions){
   return new Promise((resolve, reject) => {
-    pool.query('SELECT * FROM label_survey_item_option WHERE id = $1', 
+    pool.query('SELECT * FROM label_survey_item_option WHERE survey_item_option_id = $1', 
       [resultOptions.rows[i].id], (error, resultOptionLabels) => {
         if (error) {
           console.log(error);

@@ -31,7 +31,11 @@ function getItems(survey_component_id){
             for(var i = 0; i < resultsItem.rows.length; i++){
               promiseVect.push(loadItem(i, resultsItem));
             }
-            Promise.all(promiseVect).then((result) => retVal.push(result)).then((result) => resolve(retVal));
+            Promise.all(promiseVect).then((result) => {
+              for(var i = 0; i < result.length; i++){
+                retVal.push(result[i]);
+              }
+            }).then((result) => resolve(retVal));
           }
         }
       }
@@ -89,12 +93,20 @@ function getOptions(i, resultsItem){
         if (error) {
           console.log(error);
         }else{
-          let retVal = [];
           let promiseVect = [];
           for(var i = 0; i < resultOptions.rows.length; i++){
             promiseVect.push(getOptionLabels(i, resultOptions));
           }
-          Promise.all(promiseVect).then((result) => retVal.push(result)).then((result) => resolve(retVal));
+          Promise.all(promiseVect).then((result) => {
+            for(var y = 0; y < result.length; y++){
+              for(var x = 0; x < resultOptions.rows.length; x++){
+                if(resultOptions.rows[x].id == result[y][0].survey_item_option_id){
+                  resultOptions.rows[x].labels = result[y];
+                  break;
+                }
+              }
+            }
+          }).then((result) => resolve(resultOptions.rows));
         }
       }
     );
@@ -108,6 +120,7 @@ function getOptionLabels(i, resultOptions){
         if (error) {
           console.log(error);
         }else {
+          //console.log(resultOptionLabels.rows);
           resolve(resultOptionLabels.rows);
         }
       }

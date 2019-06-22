@@ -52,13 +52,33 @@ const createSurveyItemResponse = (request, response) => {
     if(request.body.survey_item_response != null && request.body.survey_item_response.name != null && request.body.survey_item_response.value != null && 
       request.body.survey_item_response.survey_item_id != null && !isNaN(request.body.survey_item_response.survey_item_id)){
       const { name, value, survey_item_id } = request.body.survey_item_response;
-      pool.query('INSERT INTO survey_item_response (name, value, survey_item_id, survey_component_response_id) VALUES ($1, $2, $3, $4) RETURNING id', 
-        [name, value, survey_item_id, survey_component_response_id], (error, results) => {
+      pool.query('SELECT * FROM survey_item_response WHERE survey_item_id = $1 AND survey_component_response_id = $2', 
+        [survey_item_id, survey_component_response_id], (error, resultsSearch) => {
           if (error) {
             console.log(error);
             response.status(500).send("Internal Server Error");
-          }else if(results.rowCount != 0){
-            response.status(201).send({id: results.rows[0].id});
+          } else if(resultsSearch.rowCount == 0){//the row is new and the we insert it
+            pool.query('INSERT INTO survey_item_response (name, value, survey_item_id, survey_component_response_id) VALUES ($1, $2, $3, $4) RETURNING id', 
+              [name, value, survey_item_id, survey_component_response_id], (error, results) => {
+                if (error) {
+                  console.log(error);
+                  response.status(500).send("Internal Server Error");
+                }else if(results.rowCount != 0){
+                  response.status(201).send({id: results.rows[0].id});
+                }
+              }
+            );
+          } else if(resultsSearch.rowCount != 0){//the row was already present, than we update it
+            pool.query('UPDATE survey_item_response SET name = $1, value = $2 WHERE survey_item_id = $3 AND survey_component_response_id = $4', 
+              [name, value, survey_item_id, survey_component_response_id], (error, results) => {
+                if (error) {
+                  console.log(error);
+                  response.status(500).send("Internal Server Error");
+                }else if(results.rowCount != 0){
+                  response.status(201).send({id: resultsSearch.rows[0].id});
+                }
+              }
+            );
           }
         }
       );

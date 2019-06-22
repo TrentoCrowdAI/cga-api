@@ -33,15 +33,6 @@ passport.use(new GoogleStrategy(google,
     }
 ));
 
-/*
-// Register Google Passport strategy 
-passport.use(new GoogleStrategy(google, 
-  // Gets called when user authorizes access to their profile
-  async (accessToken, refreshToken, profile, done) =>
-      // Return done callback and pass transformed user object
-      done(null, transformGoogleProfile(profile._json))
-));*/
-
 // Serialize user into the sessions
 passport.serializeUser((user, done) => done(null, user));
 
@@ -67,7 +58,7 @@ app.use(passport.session());
 app.get('/auth/google', passport.authenticate('google', {scope: ['profile'] }));
 
 app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/google', session: true}),(req, res) => {
-  console.log(req.user);
+  //console.log(req.user);
   req.session.user = req.user;
   dbUser.createUser(req, res);
 });

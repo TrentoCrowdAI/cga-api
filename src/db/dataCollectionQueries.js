@@ -10,7 +10,7 @@ const getSurveys = (request, response) => {
   var data_collection_id = parseInt(request.params.id1);
   var subject_id = parseInt(request.params.id2);
   if(data_collection_id != undefined && !isNaN(data_collection_id) && subject_id != undefined && !isNaN(subject_id)){
-    pool.query('SELECT SC.name, SC.survey_id, SC.role_id, SCR.status, SCR.creation_date, SCR.id AS survey_component_response_id, SCR.survey_response_id, SCR.survey_component_id FROM survey_component SC, survey_component_response SCR WHERE SC.id = SCR.survey_component_id AND SC.id IN (SELECT survey_component_id FROM survey_component_response WHERE user_id = $1 AND survey_response_id IN (SELECT id FROM survey_response WHERE subject_id = $2 AND survey_id IN (SELECT id FROM survey WHERE data_collection_id = $3)))', 
+    pool.query('SELECT SC.name, SC.survey_id, SC.role_id, SCR.status, SCR.creation_date, SCR.id AS survey_component_response_id, SCR.survey_response_id, SCR.survey_component_id FROM survey_component_response SCR, survey_component SC WHERE SC.id = SCR.survey_component_id AND SCR.user_id = $1 AND SCR.survey_response_id IN (SELECT id FROM survey_response WHERE subject_id = $2 AND survey_id IN (SELECT id FROM survey WHERE data_collection_id = $3)) ORDER BY SCR.creation_date ASC', 
       [request.session.user.id, subject_id, data_collection_id], (error, results) => {
         if (error) {
           console.log(error);
@@ -47,7 +47,7 @@ const getDataCollectionSubjects = (request, response) => {
   var data_collection_id = parseInt(request.params.id);
   
   if(data_collection_id != undefined && !isNaN(data_collection_id)){
-    pool.query('SELECT S.id, S.name, S.surname, S.contact, S.location, SR.creation_date, SR.status FROM survey_response SR, survey_component_response SCR, subject S WHERE SR.id = SCR.survey_response_id AND SR.subject_id = S.id AND SCR.user_id = $1 AND survey_id IN (SELECT id FROM survey WHERE data_collection_id = $2)', 
+    pool.query('SELECT S.id, S.name, S.surname, S.contact, S.location FROM survey_response SR, survey_component_response SCR, subject S WHERE SR.id = SCR.survey_response_id AND SR.subject_id = S.id AND SR.status = \'incomplete\' AND SCR.user_id = $1 AND survey_id IN (SELECT id FROM survey WHERE data_collection_id = $2) GROUP BY S.id ORDER BY S.surname ASC, S.name ASC', 
       [request.session.user.id, data_collection_id], (error, results) => {
         if (error) {
           console.log(error);

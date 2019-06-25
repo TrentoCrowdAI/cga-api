@@ -4,23 +4,17 @@ let adminRole = {
   description: 'admin role',
 };
 
-let adminUser = {
-  id: '1231231231231234',
-  name: 'John',
-  surname: 'Doe',
-};
-
 let dummyUser = {
   id: '123123123123123',
   name: 'John',
   surname: 'Doe',
+  avatar: 'asdasdnakjsbdkjsdhjasdhkjashdjk.com'
 };
 
 let dummyProject = {
   name: 'test',
   description: 'cga test',
-  creation_date: '2019-01-01T01:00:00.000Z',
-  user_id: adminUser.id
+  user_id: dummyUser.id
 };
 
 let dummyDataCollection = {
@@ -103,6 +97,6 @@ let dummyItemResponse = {
 let invalid_id = 111111;
 let string_id = "AAAA";
 
-module.exports = {string_id, invalid_id, dummyUser, adminRole, adminUser, dummyProject, dummyDataCollection,
+module.exports = {string_id, invalid_id, dummyUser, adminRole, dummyProject, dummyDataCollection,
   dummySurvey, dummySurveyComponent, dummySurveyItem,  dummySurveyItemOption,  dummySurveyItemOptionLabel, 
   dummySurveyItemLabel, dummySubject,  dummyRole, dummyMember,  dummyResponse, dummyComponentResponse, dummyItemResponse, dummySurveyItemImage};

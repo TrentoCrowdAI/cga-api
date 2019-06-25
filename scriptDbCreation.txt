@@ -25,7 +25,8 @@ CREATE TABLE project(
 CREATE TABLE "user"(
  id VARCHAR(30) PRIMARY KEY NOT NULL,
  name VARCHAR (100) NOT NULL,
- surname VARCHAR (100) NOT NULL
+ surname VARCHAR (100) NOT NULL,
+ avatar VARCHAR (300) NOT NULL
 );
 
 CREATE TABLE role(
@@ -35,7 +36,7 @@ CREATE TABLE role(
 );
 
 CREATE TABLE member(
- project_id INTEGER NOT NULL REFERENCES project(id) ON DELETE CASCADE,
+ project_id INTEGER NOT NULL REFERENCES project(id),
  user_id VARCHAR(30) NOT NULL REFERENCES "user"(id),
  status VARCHAR (45) NOT NULL,
  creation_date TIMESTAMP (2) NOT NULL,
@@ -124,7 +125,8 @@ CREATE TABLE survey_component_response (
   status VARCHAR(45) NOT NULL,
   creation_date TIMESTAMP(2) NOT NULL,
   survey_response_id INTEGER NOT NULL REFERENCES survey_response(id),
-  user_id VARCHAR(30) NOT NULL REFERENCES "user"(id)
+  user_id VARCHAR(30) NOT NULL REFERENCES "user"(id),
+  survey_component_id INTEGER NOT NULL REFERENCES survey_component(id)
 );
 
 CREATE TABLE survey_item_response (

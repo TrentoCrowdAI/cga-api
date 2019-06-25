@@ -52,13 +52,41 @@ const createSurveyItemResponse = (request, response) => {
     if(request.body.survey_item_response != null && request.body.survey_item_response.name != null && request.body.survey_item_response.value != null && 
       request.body.survey_item_response.survey_item_id != null && !isNaN(request.body.survey_item_response.survey_item_id)){
       const { name, value, survey_item_id } = request.body.survey_item_response;
-      pool.query('INSERT INTO survey_item_response (name, value, survey_item_id, survey_component_response_id) VALUES ($1, $2, $3, $4) RETURNING id', 
-        [name, value, survey_item_id, survey_component_response_id], (error, results) => {
+      pool.query('SELECT * FROM survey_item_response WHERE survey_item_id = $1 AND survey_component_response_id = $2', 
+        [survey_item_id, survey_component_response_id], (error, resultsSearch) => {
           if (error) {
             console.log(error);
             response.status(500).send("Internal Server Error");
-          }else if(results.rowCount != 0){
-            response.status(201).send({id: results.rows[0].id});
+          } else if(resultsSearch.rowCount == 0){//the row is new and the we insert it
+            pool.query('INSERT INTO survey_item_response (name, value, survey_item_id, survey_component_response_id) VALUES ($1, $2, $3, $4) RETURNING id', 
+              [name, value, survey_item_id, survey_component_response_id], (error, results) => {
+                if (error) {
+                  console.log(error);
+                  response.status(500).send("Internal Server Error");
+                }else if(results.rowCount != 0){
+                  updateStatusReponseComponent(survey_item_id, survey_component_response_id).then(
+                    updateStatusSurveyReponse(survey_component_response_id).then(
+                      response.status(201).send({id: results.rows[0].id})
+                    )
+                  );
+                }
+              }
+            );
+          } else if(resultsSearch.rowCount != 0){//the row was already present, than we update it
+            pool.query('UPDATE survey_item_response SET name = $1, value = $2 WHERE survey_item_id = $3 AND survey_component_response_id = $4', 
+              [name, value, survey_item_id, survey_component_response_id], (error, results) => {
+                if (error) {
+                  console.log(error);
+                  response.status(500).send("Internal Server Error");
+                }else if(results.rowCount != 0){
+                  updateStatusReponseComponent(survey_item_id, survey_component_response_id).then(
+                    updateStatusSurveyReponse(survey_component_response_id).then(
+                      response.status(201).send({id: resultsSearch.rows[0].id})
+                    )
+                  );
+                }
+              }
+            );
           }
         }
       );
@@ -68,6 +96,58 @@ const createSurveyItemResponse = (request, response) => {
   }else{
     response.status(400).send("Invalid Id");
   }
+}
+
+const updateStatusReponseComponent = (survey_item_id, survey_component_response_id) => {
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM (SELECT count(*) as count from survey_item WHERE survey_component_id = (SELECT id FROM survey_component WHERE id = (SELECT survey_component_id FROM survey_item WHERE id = $1))) AS q1, (SELECT count(*) as count FROM survey_item_response WHERE survey_component_response_id = $2) AS q2 WHERE q1.count = q2.count',
+      [survey_item_id, survey_component_response_id],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+        }else if(results.rowCount != 0){
+          pool.query('UPDATE survey_component_response SET status = \'complete\' WHERE id = $1 RETURNING *',
+            [survey_component_response_id],
+            (error, results) => {
+              if (error) {
+                console.log(error);
+              }else{
+                resolve(undefined);
+              }
+            }
+          );
+        }else{
+          resolve(undefined);
+        }
+      }
+    );
+  });
+}
+
+const updateStatusSurveyReponse = (survey_component_response_id) => {
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT count(*) FROM survey_response WHERE id IN (SELECT SR.id FROM survey_response SR, survey_component_response SCR WHERE SR.id = SCR.survey_response_id AND SCR.status = \'incomplete\' AND SR.id IN (SELECT survey_response_id FROM survey_component_response WHERE id = $1))',
+      [survey_component_response_id],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+        }else if(results.rowCount != 0){
+          pool.query('UPDATE survey_response SET status = \'complete\' WHERE id IN (SELECT survey_response_id FROM survey_component_response WHERE id = $1) RETURNING *',
+            [survey_component_response_id],
+            (error, results) => {
+              if (error) {
+                console.log(error);
+              }else{
+                resolve(undefined);
+              }
+            }
+          );
+        }else{
+          resolve(undefined);
+        }
+      }
+    );
+  });
 }
 
 const updateSurveyItemResponse = (request, response) => {

@@ -30,7 +30,7 @@ const addSubjectToSurvey = (request, response) => {
   if(survey_id != undefined && !isNaN(survey_id)){
     if(request.body.subject != null && request.body.subject.id != null && !isNaN(request.body.subject.id)){
       const subject_id  = request.body.subject.id;
-      pool.query('INSERT INTO survey_response (status, creation_date, subject_id, survey_id) VALUES (\'New\', NOW(), $1, $2) RETURNING *', 
+      pool.query('INSERT INTO survey_response (status, creation_date, subject_id, survey_id) VALUES (\'incomplete\', NOW(), $1, $2) RETURNING *', 
         [subject_id, survey_id], (error, results) => {
           if (error) {
             console.log(error);

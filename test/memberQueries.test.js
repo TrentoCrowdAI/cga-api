@@ -6,16 +6,15 @@ const pool = connection.pool;
 const invalid_id = require('./dummies.js').invalid_id;
 const string_id = require('./dummies.js').string_id;
 const adminRole = require('./dummies.js').adminRole;
-const adminUser = require('./dummies.js').adminUser;
+const dummyUser = require('./dummies.js').dummyUser;
 const dummyProject = require('./dummies.js').dummyProject;
 const dummyRole = require('./dummies.js').dummyRole;
-const dummyUser = require('./dummies.js').dummyUser;
 const dummyMember = require('./dummies.js').dummyMember;
 
 beforeAll(async (done) => {
   process.env.NODE_ENV = 'test';
   await request(app).post('/roles').set('Accept', /json/).send({role: adminRole}).then(async (response) => {//creation of the role
-    await request(app).post('/users').set('Accept', /json/).send({user: adminUser}).then(async (response) => {//creation of the user
+    await request(app).post('/users').set('Accept', /json/).send({user: dummyUser}).then(async (response) => {//creation of the user
       await request(app).post('/projects').set('Accept', /json/).send({project: dummyProject}).then(async (response) => {//creation of the project
         dummyProject.id = response.body.id;
         dummyMember.project_id = response.body.id;
@@ -25,17 +24,14 @@ beforeAll(async (done) => {
       });
     });
   });
-  
   done();
 });
 
 afterAll(async () => {
-  await request(app).delete('/projects/' + dummyProject.id).then(async (response) => {
-    await request(app).delete('/users/' + adminUser.id).then(async (response) => {
-      await request(app).delete('/roles/' + adminRole.id).then(async (response) => {
-        await request(app).delete('/roles/' +dummyRole.id).then(async() => {
-          await request(app).delete('/users/' + dummyUser.id);
-        });
+  await request(app).delete('/projects/'+dummyProject.id).then(async (response) => {
+    await request(app).delete('/users/' + dummyUser.id).then(async () => {
+      await request(app).delete('/roles/' + adminRole.id).then(async () => {
+        await request(app).delete('/roles/' +dummyRole.id);
       });
     });
   });

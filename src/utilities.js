@@ -1,12 +1,16 @@
-const dummyUser = {id: '123123123123123',name: 'John',surname: 'Doe'};
+const dummyUser = {
+  id: '123123123123123',
+  name: 'John',
+  surname: 'Doe',
+  avatar: 'asdasdnakjsbdkjsdhjasdhkjashdjk.com'
+};
 
 const isLoggedIn = (req, res, next) => {
   if(process.env.NODE_ENV === 'test'){
     req.session = req.session || {};
     req.session.user = dummyUser;
-  }else{
-    console.log(req.session);
   }
+
   if (req.session && req.session.user !== undefined) {
     next();
   } else {
@@ -18,9 +22,8 @@ const isLoggedInWithAdminCheck = async (req, res, next) => {
   if(process.env.NODE_ENV === 'test'){
     req.session = req.session || {};
     req.session.user = dummyUser;
-  }else{
-    console.log(req.session);
   }
+  
   if (req.session && req.session.user !== undefined) {
     adminCheck(req, res, next);
   } else {
@@ -55,7 +58,7 @@ async function adminCheck(request, response, next){
         }
       );
     }
-  }else if(request.path.includes("/projects/") || request.body.project != null){
+  }else if(request.path.includes("/projects/") || request.body.project != null ){
     var project_id;
     if(request.params.id != undefined){
       project_id = request.params.id;
@@ -73,12 +76,23 @@ async function adminCheck(request, response, next){
           if (error) {
             console.log(error);
             response.status(500).send("Internal Server Error");
-          }else if(results.rows[0] != null){
-            if(results.rows[0].name != null && results.rows[0].name == 'ADMIN'){
+          }else if(results.rows[0] != null && results.rows[0].name != null){
+            if(results.rows[0].name == 'ADMIN'){
               next();
             }
-          }else{
-            response.status(403).json('Permission Denied');
+          }else{//check in order to verify if the projects hasn't any user 
+            pool.query('SELECT count(*) FROM project LEFT JOIN member ON project.id=member.project_id WHERE project.id = $1', 
+              [project_id], (error, results) => {
+                if (error) {
+                  console.log(error);
+                  response.status(500).send("Internal Server Error");
+                }else if(results.rows[0] != null && results.rows[0].count == 1){ //if count == 1 the project exists but it has no user
+                  next();
+                }else{
+                  response.status(403).json('Permission Denied');
+                }
+              }
+            );
           }
         }
       );
@@ -94,6 +108,7 @@ async function adminCheck(request, response, next){
     }
 
     if(isNaN(data_collection_id)){
+      console.log("A");
       response.status(403).json('Permission Denied');
     }else{
       pool.query('SELECT * FROM role WHERE id IN (SELECT role_id FROM member WHERE user_id = $1 AND project_id IN (SELECT project_id FROM data_collection WHERE id = $2))', 
@@ -106,6 +121,7 @@ async function adminCheck(request, response, next){
               next();
             }
           }else{
+            console.log("AA");
             response.status(403).json('Permission Denied');
           }
         }

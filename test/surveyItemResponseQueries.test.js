@@ -33,6 +33,7 @@ beforeAll(async () => {
             dummyResponse.survey_id = response.body.id;
             await request(app).post('/surveys/' + dummySurvey.id + "/surveyComponents").set('Accept', /json/).send({survey_component: dummySurveyComponent}).then(async (response) => {
               dummySurveyComponent.id = response.body.id;
+              dummyComponentResponse.survey_component_id = response.body.id;
               dummySurveyItem.survey_component_id = response.body.id;
               await request(app).post('/surveyComponents/' + dummySurveyComponent.id + "/surveyItems").set('Accept', /json/).send({survey_item: dummySurveyItem}).then(async (response) => {
                 dummySurveyItem.id = response.body.id;
@@ -45,7 +46,7 @@ beforeAll(async () => {
                     dummyResponse.status = response.body[0].status;
                     dummyResponse.creation_date = response.body[0].creation_date;
                     dummyComponentResponse.survey_response_id = response.body[0].id;
-                    await request(app).post('/responses/' + dummyResponse.id + "/user").set('Accept', /json/).send({user: dummyUser}).then((response) => {
+                    await request(app).post('/responses/' + dummyResponse.id + "/componentResponses").set('Accept', /json/).send({survey_component_response: dummyComponentResponse}).then((response) => {
                       dummyComponentResponse.id = response.body[0].id;
                       dummyComponentResponse.status = response.body[0].status;
                       dummyComponentResponse.creation_date = response.body[0].creation_date;
@@ -72,9 +73,11 @@ afterAll(async () => {
           await request(app).delete('/surveyComponents/' + dummySurveyComponent.id).then(async () => {
             await request(app).delete('/surveys/' + dummySurvey.id).set('Accept', /json/).send({survey: dummySurvey}).then(async () => {
               await request(app).delete('/dataCollections/' + dummyDataCollection.id).set('Accept', /json/).send({data_collection: dummyDataCollection}).then(async () => {
-                await request(app).delete('/projects/' + dummyProject.id).then(async () => {
-                  await request(app).delete('/users/' + dummyUser.id).then(async () => {
-                    await request(app).delete('/roles/' + adminRole.id);
+                await request(app).delete('/projects/'+dummyProject.id+"/members/"+dummyUser.id).then(async () => {
+                  await request(app).delete('/projects/' + dummyProject.id).then(async () => {
+                    await request(app).delete('/users/' + dummyUser.id).then(async () => {
+                      await request(app).delete('/roles/' + adminRole.id);
+                    });
                   });
                 });
               });

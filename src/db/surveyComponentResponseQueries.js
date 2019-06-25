@@ -49,12 +49,13 @@ const getSurveyComponentResponseById = (request, response) => {
 const createSurveyComponentResponse = (request, response) => {
   var survey_response_id = parseInt(request.params.id);
   if(survey_response_id != undefined && !isNaN(survey_response_id)){
-    if(request.body.user != null){
-      var isNumber =  /^\d+$/.test(request.body.user.id);
-      if(request.body.user.id != null && isNumber){
-        const user_id = request.body.user.id;
-        pool.query('INSERT INTO survey_component_response (status, creation_date, user_id, survey_response_id) VALUES (\'New\', NOW(), $1, $2) RETURNING *', 
-          [user_id, survey_response_id], (error, results) => {
+    if(request.body.survey_component_response != null && request.body.survey_component_response.user_id != null){
+      var isNumber =  /^\d+$/.test(request.body.survey_component_response.user_id);
+      if(isNumber && request.body.survey_component_response.survey_component_id != null && !isNaN(request.body.survey_component_response.survey_component_id)){
+        const user_id = request.body.survey_component_response.user_id;
+        const survey_component_id = request.body.survey_component_response.survey_component_id;
+        pool.query('INSERT INTO survey_component_response (status, creation_date, user_id, survey_response_id, survey_component_id) VALUES (\'incomplete\', NOW(), $1, $2, $3) RETURNING *', 
+          [user_id, survey_response_id, survey_component_id], (error, results) => {
             if (error) {
               console.log(error);
               response.status(500).send("Internal Server Error");
@@ -81,10 +82,11 @@ const updateSurveyComponentResponse = (request, response) => {
     if(request.body.survey_component_response != null ){
       var isNumber =  /^\d+$/.test(request.body.survey_component_response.user_id);
       if( request.body.survey_component_response.status != null && request.body.survey_component_response.creation_date != null &&
-        request.body.survey_component_response.user_id && isNumber && request.body.survey_component_response.survey_response_id != null && !isNaN(request.body.survey_component_response.survey_response_id)){
-        const { status, creation_date, user_id, survey_response_id } = request.body.survey_component_response;
-        pool.query('UPDATE survey_component_response SET status = $1, creation_date = $2, user_id = $3, survey_response_id = $4 WHERE id = $5 RETURNING *',
-          [status, creation_date, user_id, survey_response_id, survey_component_response_id],
+        request.body.survey_component_response.user_id && isNumber && request.body.survey_component_response.survey_response_id != null && !isNaN(request.body.survey_component_response.survey_response_id)
+          && request.body.survey_component_response.survey_component_id != null && !isNaN(request.body.survey_component_response.survey_component_id)){
+        const { status, creation_date, user_id, survey_response_id, survey_component_id } = request.body.survey_component_response;
+        pool.query('UPDATE survey_component_response SET status = $1, creation_date = $2, user_id = $3, survey_response_id = $4, survey_component_id = $5 WHERE id = $6 RETURNING *',
+          [status, creation_date, user_id, survey_response_id, survey_component_id, survey_component_response_id],
           (error, results) => {
             if (error) {
               console.log(error);

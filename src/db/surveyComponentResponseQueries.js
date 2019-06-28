@@ -54,6 +54,9 @@ const createSurveyComponentResponse = (request, response) => {
       if(isNumber && request.body.survey_component_response.survey_component_id != null && !isNaN(request.body.survey_component_response.survey_component_id)){
         const user_id = request.body.survey_component_response.user_id;
         const survey_component_id = request.body.survey_component_response.survey_component_id;
+        
+        //AGGIUNGERE QUA CONTROLLO RUOLO
+
         pool.query('INSERT INTO survey_component_response (status, creation_date, user_id, survey_response_id, survey_component_id) VALUES (\'incomplete\', NOW(), $1, $2, $3) RETURNING *', 
           [user_id, survey_response_id, survey_component_id], (error, results) => {
             if (error) {

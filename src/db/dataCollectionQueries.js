@@ -10,7 +10,7 @@ const getSurveys = (request, response) => {
   var data_collection_id = parseInt(request.params.id1);
   var subject_id = parseInt(request.params.id2);
   if(data_collection_id != undefined && !isNaN(data_collection_id) && subject_id != undefined && !isNaN(subject_id)){
-    pool.query('SELECT C.name, C.survey_id, C.role_id, C.status, C.creation_date, C.survey_component_response_id, C.survey_response_id, C.survey_component_id, count(*) ' + 
+    pool.query('SELECT C.name, C.survey_id, C.role_id, C.status, C.creation_date, C.survey_component_response_id, C.survey_response_id, C.survey_component_id, count(*) AS count ' + 
                 'FROM (SELECT SC.name, SC.survey_id, SC.role_id, SCR.status, SCR.creation_date, SCR.id AS survey_component_response_id, SCR.survey_response_id, SCR.survey_component_id ' + 
                 'FROM survey_component_response SCR, survey_component SC ' +
                 'WHERE SC.id = SCR.survey_component_id AND SCR.user_id = $1 AND SCR.survey_response_id IN (SELECT id ' + 
@@ -61,9 +61,7 @@ const getDataCollectionSubjects = (request, response) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");
-        }else if(results.rowCount == 0){
-          response.status(404).send("Subjects not found");
-        }else{
+        }else {
           response.status(200).json(results.rows);
         }
       }

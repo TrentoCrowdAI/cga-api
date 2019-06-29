@@ -54,19 +54,29 @@ const createSurveyComponentResponse = (request, response) => {
       if(isNumber && request.body.survey_component_response.survey_component_id != null && !isNaN(request.body.survey_component_response.survey_component_id)){
         const user_id = request.body.survey_component_response.user_id;
         const survey_component_id = request.body.survey_component_response.survey_component_id;
-        
-        //AGGIUNGERE QUA CONTROLLO RUOLO
-
-        pool.query('INSERT INTO survey_component_response (status, creation_date, user_id, survey_response_id, survey_component_id) VALUES (\'incomplete\', NOW(), $1, $2, $3) RETURNING *', 
-          [user_id, survey_response_id, survey_component_id], (error, results) => {
+        pool.query('(SELECT * FROM survey_component SC, role R, member M, "user" U WHERE  SC.role_id = R.id AND R.id = M.role_id AND M.user_id = U.id AND U.id = $1 AND M.project_id IN (SELECT P.id FROM survey_component SC, survey S, data_collection DC, project P WHERE P.id = DC.project_id AND DC.id = S.data_collection_id AND S.id = SC.survey_id AND SC.id = $2))', 
+          [user_id, survey_component_id], (error, results) => {
             if (error) {
               console.log(error);
               response.status(500).send("Internal Server Error");
-            }else if(results.rowCount != 0){
-              response.status(201).send(results.rows);
+            }else if(results.rowCount > 0){
+              pool.query('INSERT INTO survey_component_response (status, creation_date, user_id, survey_response_id, survey_component_id) VALUES (\'incomplete\', NOW(), $1, $2, $3) RETURNING *', 
+                [user_id, survey_response_id, survey_component_id], (error, results) => {
+                  if (error) {
+                    console.log(error);
+                    response.status(500).send("Internal Server Error");
+                  }else if(results.rowCount != 0){
+                    response.status(201).send(results.rows);
+                  }
+                }
+              );
+            }else{
+              response.status(403).send("User not authorized");
             }
           }
         );
+
+        
       }else{
         response.status(400).send("Bad Request");
       }

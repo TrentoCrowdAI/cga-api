@@ -70,12 +70,12 @@ describe('Test the root path', () => {
 });
 
 describe('Test /surveyComponents/:id/surveyItems method root path', () => {
-  test('Test GET method', (done) => {
+  /*test('Test GET method', (done) => {
     request(app).get('/surveyComponents/' + dummySurveyComponent.id + "/surveyItems").then((response) => {
       expect(response.statusCode).toBe(200);
       done();
     });
-  });
+  });*/
   test('Test POST method', (done) => {
     request(app).post('/surveyComponents/' + dummySurveyComponent.id + "/surveyItems").set('Accept', /json/).send({survey_item: dummySurveyItem}).then((response) => {
       expect(response.statusCode).toBe(201);

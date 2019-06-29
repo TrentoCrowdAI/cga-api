@@ -90,13 +90,14 @@ describe('Test /surveys/:id/surveyComponents method root path', () => {
   });
 });
 describe('Test /surveyComponents method root path', () => {
-  test('Test GET method with valid id', (done) => {
-    request(app).get('/surveyComponents/' + dummySurveyComponent.id).set('Accept', /json/).send({survey_component: dummySurveyComponent}).then((response) => {
+  
+  test('Test GET method with valid id', async (done) => {
+    await request(app).get('/surveyComponents/' + dummySurveyComponent.id).set('Accept', /json/).send({survey_component: dummySurveyComponent}).then((response) => {
       expect(response.statusCode).toBe(200);
-      expect(response.body[0].id).toBe(dummySurveyComponent.id);
-      expect(response.body[0].name).toBe(dummySurveyComponent.name);
-      expect(response.body[0].role_id).toBe(dummySurveyComponent.role_id);
-      expect(response.body[0].survey_id).toBe(dummySurveyComponent.survey_id);
+      expect(response.body.id).toBe(dummySurveyComponent.id);
+      expect(response.body.name).toBe(dummySurveyComponent.name);
+      expect(response.body.role_id).toBe(dummySurveyComponent.role_id);
+      expect(response.body.survey_id).toBe(dummySurveyComponent.survey_id);
       done();
     });
   });

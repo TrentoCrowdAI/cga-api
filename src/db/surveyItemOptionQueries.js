@@ -34,20 +34,10 @@ const getSurveyItemOptionById = (request, response) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");
+        }else if (resultOptions.rowCount == 0){
+          response.status(404).json("SurveyItemOption not found")
         }else{
-          for(var i = 0; i < resultOptions.rows.lenght; i++){
-            //loading options label
-            pool.query('SELECT * FROM label_survey_item_option WHERE id = $1', 
-              [resultOptions.rows[i].id], (error, resultOptionLabels) => {
-                if (error) {
-                  console.log(error);
-                }else {
-                  resultOptions.rows[i].labels = resultOptionLabels.rows
-                }
-              }
-            );
-          }
-          response.status(200).json(resultOptions.rows);
+          loadLabels(resultOptions).then((results) => response.status(200).json(results.rows));
         }
       }
     );
@@ -55,6 +45,44 @@ const getSurveyItemOptionById = (request, response) => {
     response.status(400).send("Invalid Id");
   }
 }
+
+loadLabels = (resultOptions) => {
+  return new Promise((resolve, reject) => {
+    let vettPromise = [];
+    for(var i = 0; i < resultOptions.rows.length; i++){
+      //loading options label
+      vettPromise.push(loadSingleLabel(resultOptions.rows[i].id));
+    }
+    Promise.all(vettPromise).then((results) => {
+      for(var y = 0; y < results.length; y++){
+        for(var x = 0; x < resultOptions.rows.length; x++){
+          if(results[y].rows[0] != undefined){
+            if(results[y].rows[0].survey_item_option_id == resultOptions.rows[x].id){
+              resultOptions.rows[x].labels = results[y].rows;
+              break;
+            }
+          }
+        }
+      }
+      resolve(resultOptions);
+    });
+  })
+}
+
+loadSingleLabel = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT * FROM label_survey_item_option WHERE survey_item_option_id = $1', 
+      [id], (error, resultOptionLabels) => {
+        if (error) {
+          console.log(error);
+        }else {
+          resolve(resultOptionLabels);
+        }
+      }
+    );
+  });
+}
+
 
 const createSurveyItemOption = (request, response) => {
   var survey_item_id = parseInt(request.params.id);
@@ -94,7 +122,6 @@ const updateSurveyItemOption = (request, response) => {
             console.log(error);
             response.status(500).send("Internal Server Error");
           }else if(results.rowCount == 0){
-            console.log(request.body.survey_item_option);
             response.status(404).send("SurveyItemOption not found");
           }else{
             response.status(202).send(results.rows);

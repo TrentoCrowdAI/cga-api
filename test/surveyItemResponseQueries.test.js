@@ -90,24 +90,9 @@ afterAll(async () => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('Test /', (done) => {
-    request(app).get('/').then((response) => {
-      expect(response.statusCode).toBe(200);
-      done();
-    });
-  });
-});
-
 describe('Test /componentResponses/:id/surveyItemResponses method root path', () => {
   test('Test GET method', (done) => {
-    request(app).get('/componentResponses/' + dummyResponse.id + "/surveyItemResponses").then((response) => {
+    request(app).get('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").then((response) => {
       expect(response.statusCode).toBe(200);
       done();
     });
@@ -116,6 +101,13 @@ describe('Test /componentResponses/:id/surveyItemResponses method root path', ()
     request(app).post('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummyItemResponse.id = response.body.id;
+      done();
+    });
+  });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
       done();
     });
   });

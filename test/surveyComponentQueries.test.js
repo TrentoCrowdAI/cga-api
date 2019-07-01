@@ -47,21 +47,6 @@ afterAll(async () => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('Test /', (done) => {
-    request(app).get('/').then((response) => {
-      expect(response.statusCode).toBe(200);
-      done();
-    });
-  });
-});
-
 describe('Test /surveys/:id/surveyComponents method root path', () => {
   test('Test GET method', (done) => {
     request(app).get('/surveys/' + dummySurvey.id + "/surveyComponents").then((response) => {
@@ -73,6 +58,13 @@ describe('Test /surveys/:id/surveyComponents method root path', () => {
     request(app).post('/surveys/' + dummySurvey.id + "/surveyComponents").set('Accept', /json/).send({survey_component: dummySurveyComponent}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummySurveyComponent.id = response.body.id;
+      done();
+    });
+  });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/surveys/' + dummySurvey.id + "/surveyComponents").then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
       done();
     });
   });
@@ -90,9 +82,8 @@ describe('Test /surveys/:id/surveyComponents method root path', () => {
   });
 });
 describe('Test /surveyComponents method root path', () => {
-  
-  test('Test GET method with valid id', async (done) => {
-    await request(app).get('/surveyComponents/' + dummySurveyComponent.id).set('Accept', /json/).send({survey_component: dummySurveyComponent}).then((response) => {
+  test('Test GET method with valid id', (done) => {
+    request(app).get('/surveyComponents/' + dummySurveyComponent.id).set('Accept', /json/).send({survey_component: dummySurveyComponent}).then((response) => {
       expect(response.statusCode).toBe(200);
       expect(response.body.id).toBe(dummySurveyComponent.id);
       expect(response.body.name).toBe(dummySurveyComponent.name);

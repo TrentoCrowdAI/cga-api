@@ -23,21 +23,6 @@ afterAll(async () => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('It should response the GET method', (done) => {
-    request(app).get('/').then((response) => {
-        expect(response.statusCode).toBe(200);
-        done();
-    });
-  });
-});
-
 describe('Project path test', () => {
   test('Test GET method', (done) => {
       request(app).get('/projects').then((response) => {
@@ -53,6 +38,13 @@ describe('Project path test', () => {
       done();
     });
   });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/projects').then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
+      done();
+    });
+});
   test('Test POST method with incomplete data', (done) => {
     request(app).post('/projects').set('Accept', /json/).send({project: {}}).then((response) => {
       expect(response.statusCode).toBe(400);

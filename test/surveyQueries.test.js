@@ -40,21 +40,6 @@ afterAll(async () => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('Test /', (done) => {
-    request(app).get('/').then((response) => {
-      expect(response.statusCode).toBe(200);
-      done();
-    });
-  });
-});
-
 describe('Test /dataCollections/:id/surveys method root path', () => {
   test('Test GET method', (done) => {
     request(app).get('/dataCollections/' + dummyDataCollection.id + "/surveys").then((response) => {
@@ -66,6 +51,13 @@ describe('Test /dataCollections/:id/surveys method root path', () => {
     request(app).post('/dataCollections/' + dummyDataCollection.id + "/surveys").set('Accept', /json/).send({survey: dummySurvey}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummySurvey.id = response.body.id;
+      done();
+    });
+  });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/dataCollections/' + dummyDataCollection.id + "/surveys").then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
       done();
     });
   });

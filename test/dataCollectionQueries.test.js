@@ -17,7 +17,7 @@ beforeAll(async (done) => {
       await request(app).post('/projects').set('Accept', /json/).send({project: dummyProject}).then((response) => {
         dummyProject.id = response.body.id;
         dummyDataCollection.project_id = response.body.id;
-      });//creation of the project
+      });
     });
   });
   done();
@@ -34,21 +34,6 @@ afterAll(async () => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('Test /', (done) => {
-    request(app).get('/').then((response) => {
-      expect(response.statusCode).toBe(200);
-      done();
-    });
-  });
-});
-
 describe('Test /projects/:id/dataCollections method root path', () => {
   test('Test GET method', (done) => {
     request(app).get('/projects/' + dummyProject.id + "/dataCollections").then((response) => {
@@ -60,6 +45,13 @@ describe('Test /projects/:id/dataCollections method root path', () => {
     request(app).post('/projects/' + dummyProject.id + "/dataCollections").set('Accept', /json/).send({data_collection: dummyDataCollection}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummyDataCollection.id = response.body.id;
+      done();
+    });
+  });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/projects/' + dummyProject.id + "/dataCollections").then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
       done();
     });
   });

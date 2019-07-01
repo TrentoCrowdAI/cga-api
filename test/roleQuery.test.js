@@ -15,21 +15,6 @@ afterAll(() => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('It should response the GET method', (done) => {
-    request(app).get('/').then((response) => {
-        expect(response.statusCode).toBe(200);
-        done();
-    });
-  });
-});
-
 describe('Role path test', () => {
   test('Test GET method', (done) => {
       request(app).get('/roles').then((response) => {
@@ -44,6 +29,13 @@ describe('Role path test', () => {
       done();
     });
   });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/roles').then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
+      done();
+    });
+});
   test('Test POST method with incomplete data', (done) => {
     request(app).post('/roles').set('Accept', /json/).send({role: {}}).then((response) => {
       expect(response.statusCode).toBe(400);

@@ -8,7 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
-const session = require('express-session');
+const session = require('cookie-session'); //express-session
 // Import Google OAuth apps config
 const {google} = require('./config');
 const dbUser = require('./db/userQueries');
@@ -24,20 +24,20 @@ const transformGoogleProfile = (profile) => {
     });
 }
 
-// Register Google Passport strategy 
-passport.use(new GoogleStrategy(google, 
-    // Gets called when user authorizes access to their profile
-    function (accessToken, refreshToken, profile, done){
-        // Return done callback and pass transformed user object
-        return done(null, transformGoogleProfile(profile._json));
-    }
-));
-
 // Serialize user into the sessions
 passport.serializeUser((user, done) => done(null, user));
 
 // Deserialize user from the sessions
 passport.deserializeUser((user, done) => done(null,user));
+
+// Register Google Passport strategy 
+passport.use(new GoogleStrategy(google, 
+    // Gets called when user authorizes access to their profile
+    (accessToken, refreshToken, profile, done) => {
+        // Return done callback and pass transformed user object
+        return done(null, transformGoogleProfile(profile._json));
+    }
+));
 
 // Inzialize http server
 const app = express();
@@ -45,9 +45,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({  
-  cookie: { maxAge: 2592000 },//1 month
   secret: process.env.SESSION_SECRET || 'default_session_secret',
   resave: false,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
   saveUninitialized: false,
 }));
 // Inzialize passport 
@@ -58,8 +58,12 @@ app.use(passport.session());
 app.get('/auth/google', passport.authenticate('google', {scope: ['profile'] }));
 
 app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/google', session: true}),(req, res) => {
-  //console.log(req.user);
   req.session.user = req.user;
+  //req.session.cookie.expires = false;
+  //var hour = 3600000;
+  //req.session.cookie.expires = new Date(Date.now() + hour);
+  //req.session.cookie.maxAge = hour;
+  //console.log("session left time: " + req.session.cookie.maxAge);
   dbUser.createUser(req, res);
 });
 

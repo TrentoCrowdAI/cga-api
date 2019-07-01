@@ -78,21 +78,6 @@ afterAll(async () => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('Test /', (done) => {
-    request(app).get('/').then((response) => {
-      expect(response.statusCode).toBe(200);
-      done();
-    });
-  });
-});
-
 describe('Test /responses/:id/componentResponses method root path', () => {
   test('Test GET method', (done) => {
     request(app).get('/responses/' + dummyResponse.id + "/componentResponses").then((response) => {
@@ -111,6 +96,13 @@ describe('Test /responses/:id/componentResponses method root path', () => {
       done();
     });
   });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/responses/' + dummyResponse.id + "/componentResponses").then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
+      done();
+    });
+  });
   test('Test POST method without data', (done) => {
     request(app).post('/responses/' + dummyComponentResponse.id + "/componentResponses").set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
@@ -122,7 +114,7 @@ describe('Test /responses/:id/componentResponses method root path', () => {
       expect(response.statusCode).toBe(400);
       done();
     });
-  });
+  });  
 });
 describe('Test /componentResponses method root path', () => {
   test('Test GET method with valid id', (done) => {

@@ -36,6 +36,8 @@ function getItems(survey_component_id){
                 retVal.push(result[i]);
               }
             }).then((result) => resolve(retVal));
+          }else{
+            resolve([]);
           }
         }
       }
@@ -100,7 +102,7 @@ function getOptions(i, resultsItem){
           Promise.all(promiseVect).then((result) => {
             for(var y = 0; y < result.length; y++){
               for(var x = 0; x < resultOptions.rows.length; x++){
-                if(resultOptions.rows[x].id == result[y][0].survey_item_option_id){
+                if(result[y][0] != undefined && resultOptions.rows[x].id == result[y][0].survey_item_option_id){
                   resultOptions.rows[x].labels = result[y];
                   break;
                 }
@@ -120,7 +122,6 @@ function getOptionLabels(i, resultOptions){
         if (error) {
           console.log(error);
         }else {
-          //console.log(resultOptionLabels.rows);
           resolve(resultOptionLabels.rows);
         }
       }
@@ -186,7 +187,6 @@ const updateSurveyItem = (request, response) => {
             console.log(error);
             response.status(500).send("Internal Server Error");
           }else if(results.rowCount == 0){
-            console.log(request.body.survey_item);
             response.status(404).send("SurveyItem not found");
           }else{
             response.status(202).send(results.rows);

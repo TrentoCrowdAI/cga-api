@@ -15,32 +15,24 @@ afterAll(() => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('It should response the GET method', (done) => {
-    request(app).get('/').then((response) => {
-        expect(response.statusCode).toBe(200);
-        done();
-    });
-  });
-});
-
 describe('Subject path test', () => {
   test('Test GET method', (done) => {
-      request(app).get('/subjects').then((response) => {
-        expect(response.statusCode).toBe(200);
-        done();
-      });
+    request(app).get('/subjects').then((response) => {
+      expect(response.statusCode).toBe(200);
+      done();
+    });
   });
   test('Test POST method', (done) => {
     request(app).post('/subjects').set('Accept', /json/).send({subject: dummySubject}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummySubject.id = response.body.id;
+      done();
+    });
+  });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/subjects').then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
       done();
     });
   });

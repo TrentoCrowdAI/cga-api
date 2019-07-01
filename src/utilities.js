@@ -23,7 +23,7 @@ const isLoggedInWithAdminCheck = async (req, res, next) => {
     req.session = req.session || {};
     req.session.user = dummyUser;
   }
-  
+
   if (req.session && req.session.user !== undefined) {
     adminCheck(req, res, next);
   } else {

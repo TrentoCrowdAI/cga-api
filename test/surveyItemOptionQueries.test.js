@@ -61,21 +61,6 @@ afterAll(async () => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('Test /', (done) => {
-    request(app).get('/').then((response) => {
-      expect(response.statusCode).toBe(200);
-      done();
-    });
-  });
-});
-
 describe('Test /surveyItems/:id/labels method root path', () => {
   test('Test GET method', (done) => {
     request(app).get('/surveyItems/' + dummySurveyItem.id + "/options").then((response) => {
@@ -87,6 +72,25 @@ describe('Test /surveyItems/:id/labels method root path', () => {
     request(app).post('/surveyItems/' + dummySurveyItem.id + "/options").set('Accept', /json/).send({survey_item_option: dummySurveyItemOption}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummySurveyItemOption.id = response.body.id;
+      done();
+    });
+  });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/surveyItems/' + dummySurveyItem.id + "/options").then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
+      done();
+    });
+  });
+  test('Test GET method', (done) => {
+    request(app).get('/surveyComponents/' + dummySurveyComponent.id + "/surveyItems").then((response) => {
+      expect(response.statusCode).toBe(200);
+      done();
+    });
+  });
+  test('Test GET method', (done) => {
+    request(app).get('/surveyComponents/' + dummySurveyComponent.id).then((response) => {
+      expect(response.statusCode).toBe(200);
       done();
     });
   });

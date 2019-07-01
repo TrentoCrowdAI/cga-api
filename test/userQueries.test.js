@@ -15,21 +15,6 @@ afterAll(() => {
   pool.end();
 });
 
-describe('GENERIC user test cases', () => {
-  it('app module should be defined', () => {
-    expect(app).toBeDefined();
-  });
-});
-
-describe('Test the root path', () => {
-  test('Test /', (done) => {
-    request(app).get('/').then((response) => {
-      expect(response.statusCode).toBe(200);
-      done();
-    });
-  });
-});
-
 describe('Test /users method root path', () => {
   test('Test GET method', (done) => {
     request(app).get('/users').then((response) => {
@@ -41,6 +26,13 @@ describe('Test /users method root path', () => {
     request(app).post('/users').set('Accept', /json/).send({user: dummyUser}).then((response) => {
       expect(response.statusCode).toBe(201);
       expect(response.body.user.id).toBe(dummyUser.id);
+      done();
+    });
+  });
+  test('Test GET method after data creation', (done) => {
+    request(app).get('/users').then((response) => {
+      expect(response.statusCode).toBe(200);
+      expect(response.body.length).not.toBe(0);
       done();
     });
   });

@@ -64,11 +64,11 @@ const createSurveyItemResponse = (request, response) => {
                   console.log(error);
                   response.status(500).send("Internal Server Error");
                 }else if(results.rowCount != 0){
-                  updateStatusReponseComponent(survey_item_id, survey_component_response_id).then(
-                    updateStatusSurveyReponse(survey_component_response_id).then(
+                  updateStatusReponseComponent(survey_item_id, survey_component_response_id).then((res) => {
+                    updateStatusSurveyReponse(survey_component_response_id).then((res) => {
                       response.status(201).send({id: results.rows[0].id})
-                    )
-                  );
+                    })
+                  });
                 }
               }
             );
@@ -79,11 +79,11 @@ const createSurveyItemResponse = (request, response) => {
                   console.log(error);
                   response.status(500).send("Internal Server Error");
                 }else if(results.rowCount != 0){
-                  updateStatusReponseComponent(survey_item_id, survey_component_response_id).then(
-                    updateStatusSurveyReponse(survey_component_response_id).then(
+                  updateStatusReponseComponent(survey_item_id, survey_component_response_id).then((res) => {
+                    updateStatusSurveyReponse(survey_component_response_id).then((res) => {
                       response.status(201).send({id: resultsSearch.rows[0].id})
-                    )
-                  );
+                    });
+                  });
                 }
               }
             );
@@ -100,12 +100,12 @@ const createSurveyItemResponse = (request, response) => {
 
 const updateStatusReponseComponent = (survey_item_id, survey_component_response_id) => {
   return new Promise((resolve, reject) => {
-    pool.query('SELECT * FROM (SELECT count(*) as count from survey_item WHERE survey_component_id = (SELECT id FROM survey_component WHERE id = (SELECT survey_component_id FROM survey_item WHERE id = $1))) AS q1, (SELECT count(*) as count FROM survey_item_response WHERE survey_component_response_id = $2) AS q2 WHERE q1.count = q2.count',
+    pool.query('SELECT * FROM (SELECT count(*) as count FROM survey_item WHERE survey_component_id = (SELECT id FROM survey_component WHERE id = (SELECT survey_component_id FROM survey_item WHERE id = $1))) AS q1, (SELECT count(*) as count FROM survey_item_response WHERE survey_component_response_id = $2) AS q2 WHERE q1.count = q2.count',
       [survey_item_id, survey_component_response_id],
       (error, results) => {
         if (error) {
           console.log(error);
-        }else if(results.rowCount != 0){
+        }else if(results.rowCount != undefined && results.rowCount != 0){
           pool.query('UPDATE survey_component_response SET status = \'complete\' WHERE id = $1 RETURNING *',
             [survey_component_response_id],
             (error, results) => {
@@ -126,12 +126,12 @@ const updateStatusReponseComponent = (survey_item_id, survey_component_response_
 
 const updateStatusSurveyReponse = (survey_component_response_id) => {
   return new Promise((resolve, reject) => {
-    pool.query('SELECT count(*) FROM survey_response WHERE id IN (SELECT SR.id FROM survey_response SR, survey_component_response SCR WHERE SR.id = SCR.survey_response_id AND SCR.status = \'incomplete\' AND SR.id IN (SELECT survey_response_id FROM survey_component_response WHERE id = $1))',
+    pool.query('SELECT * FROM survey_component_response WHERE id = $1 AND status = \'incomplete\'',
       [survey_component_response_id],
       (error, results) => {
         if (error) {
           console.log(error);
-        }else if(results.rowCount != 0){
+        }else if(results.rowCount == 0){
           pool.query('UPDATE survey_response SET status = \'complete\' WHERE id IN (SELECT survey_response_id FROM survey_component_response WHERE id = $1) RETURNING *',
             [survey_component_response_id],
             (error, results) => {

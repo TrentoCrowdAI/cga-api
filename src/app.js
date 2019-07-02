@@ -8,7 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
-const session = require('cookie-session'); //express-session
+const session = require('cookie-session');
 // Import Google OAuth apps config
 const {google} = require('./config');
 const dbUser = require('./db/userQueries');
@@ -59,11 +59,6 @@ app.get('/auth/google', passport.authenticate('google', {scope: ['profile'] }));
 
 app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/auth/google', session: true}),(req, res) => {
   req.session.user = req.user;
-  //req.session.cookie.expires = false;
-  //var hour = 3600000;
-  //req.session.cookie.expires = new Date(Date.now() + hour);
-  //req.session.cookie.maxAge = hour;
-  //console.log("session left time: " + req.session.cookie.maxAge);
   dbUser.createUser(req, res);
 });
 

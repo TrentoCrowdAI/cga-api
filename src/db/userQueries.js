@@ -27,10 +27,8 @@ const createUser = (request, response) => {
                   response.status(201).json({"user": results.rows[0]});
                 }else{
                   var cookies = new Cookies(request, response);
-                  //var connectSidCookie = cookies.get('connect.sid');
                   var expressSessionCookie = cookies.get('express:sess');
                   var expressSessionSignatureCookie = cookies.get('express:sess.sig');
-                  //results.rows[0].connectSidCookie = connectSidCookie;
                   results.rows[0].expressSessionCookie = expressSessionCookie;
                   results.rows[0].expressSessionSignatureCookie = expressSessionSignatureCookie;
                   response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));
@@ -43,10 +41,8 @@ const createUser = (request, response) => {
             response.status(200).json({"user": results.rows[0]});
           }else{
             var cookies = new Cookies(request, response);
-            //var connectSidCookie = cookies.get('connect.sid');
             var expressSessionCookie = cookies.get('express:sess');
             var expressSessionSignatureCookie = cookies.get('express:sess.sig');
-            //results.rows[0].connectSidCookie = connectSidCookie;
             results.rows[0].expressSessionCookie = expressSessionCookie;
             results.rows[0].expressSessionSignatureCookie = expressSessionSignatureCookie;
             response.redirect("OAuthLogin://login?user=" + JSON.stringify(results.rows[0]));

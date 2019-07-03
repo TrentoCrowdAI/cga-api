@@ -8,10 +8,10 @@ const isLoggedIn = require('../../utilities.js').isLoggedIn;
 
 exports.init = function (app) {
 
-  app.get('/surveyItemResponses/:id', isLoggedIn, dbSurveyItemResponse.getSurveyItemResponseById);
+  app.get('/itemResponses/:id', isLoggedIn, dbSurveyItemResponse.getSurveyItemResponseById);
 
-  app.put('/surveyItemResponses/:id', isLoggedIn, dbSurveyItemResponse.updateSurveyItemResponse);
+  app.put('/itemResponses/:id', isLoggedIn, dbSurveyItemResponse.updateSurveyItemResponse);
 
-  app.delete('/surveyItemResponses/:id', isLoggedIn, dbSurveyItemResponse.deleteSurveyItemResponse);
+  app.delete('/itemResponses/:id', isLoggedIn, dbSurveyItemResponse.deleteSurveyItemResponse);
 
 };

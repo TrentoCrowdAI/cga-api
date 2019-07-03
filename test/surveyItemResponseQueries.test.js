@@ -90,35 +90,35 @@ afterAll(async () => {
   pool.end();
 });
 
-describe('Test /componentResponses/:id/surveyItemResponses method root path', () => {
+describe('Test /componentResponses/:id/itemResponses method root path', () => {
   test('Test GET method', (done) => {
-    request(app).get('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").then((response) => {
+    request(app).get('/componentResponses/' + dummyComponentResponse.id + "/itemResponses").then((response) => {
       expect(response.statusCode).toBe(200);
       done();
     });
   });
   test('Test POST method', (done) => {
-    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
+    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/itemResponses").set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
       expect(response.statusCode).toBe(201);
       dummyItemResponse.id = response.body.id;
       done();
     });
   });
   test('Test GET method after data creation', (done) => {
-    request(app).get('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").then((response) => {
+    request(app).get('/componentResponses/' + dummyComponentResponse.id + "/itemResponses").then((response) => {
       expect(response.statusCode).toBe(200);
       expect(response.body.length).not.toBe(0);
       done();
     });
   });
   test('Test POST method without data', (done) => {
-    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").set('Accept', /json/).send({}).then((response) => {
+    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/itemResponses").set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test POST method with incomplete data', (done) => {
-    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/surveyItemResponses").set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
+    request(app).post('/componentResponses/' + dummyComponentResponse.id + "/itemResponses").set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
@@ -126,7 +126,7 @@ describe('Test /componentResponses/:id/surveyItemResponses method root path', ()
 });
 describe('Test /componentResponses method root path', () => {
   test('Test GET method with valid id', (done) => {
-    request(app).get('/surveyItemResponses/' + dummyItemResponse.id).set('Accept', /json/).send().then((response) => {
+    request(app).get('/itemResponses/' + dummyItemResponse.id).set('Accept', /json/).send().then((response) => {
       expect(response.statusCode).toBe(200);
       expect(response.body[0].id).toBe(dummyItemResponse.id);
       expect(response.body[0].name).toBe(dummyItemResponse.name);
@@ -137,37 +137,37 @@ describe('Test /componentResponses method root path', () => {
     });
   });
   test('Test GET method with invalid id', (done) => {
-    request(app).get('/surveyItemResponses/' + invalid_id).set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
+    request(app).get('/itemResponses/' + invalid_id).set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
       expect(response.statusCode).toBe(404);
       done();
     });
   });
   test('Test GET method with string id', (done) => {
-    request(app).get('/surveyItemResponses/' + string_id).then((response) => {
+    request(app).get('/itemResponses/' + string_id).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test GET subject method', (done) => {
-    request(app).get('/surveyItemResponses/' + dummyItemResponse.id).then((response) => {
+    request(app).get('/itemResponses/' + dummyItemResponse.id).then((response) => {
       expect(response.statusCode).toBe(200);
       done();
     });
   });
   test('Test GET subject method with invalid_id', (done) => {
-    request(app).get('/surveyItemResponses/' + invalid_id).then((response) => {
+    request(app).get('/itemResponses/' + invalid_id).then((response) => {
       expect(response.statusCode).toBe(404);
       done();
     });
   });
   test('Test GET subject method with string_id', (done) => {
-    request(app).get('/surveyItemResponses/' + string_id).then((response) => {
+    request(app).get('/itemResponses/' + string_id).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT', (done) => {
-    request(app).put('/surveyItemResponses/' + dummyItemResponse.id).set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
+    request(app).put('/itemResponses/' + dummyItemResponse.id).set('Accept', /json/).send({survey_item_response: dummyItemResponse}).then((response) => {
       expect(response.statusCode).toBe(202);
       expect(response.body[0].id).toBe(dummyItemResponse.id);
       expect(response.body[0].name).toBe(dummyItemResponse.name);
@@ -178,49 +178,49 @@ describe('Test /componentResponses method root path', () => {
     });
   });
   test('Test PUT with incomplete date', (done) => {
-    request(app).put('/surveyItemResponses/' + dummyItemResponse.id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
+    request(app).put('/itemResponses/' + dummyItemResponse.id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and incomplete data', (done) => {
-    request(app).put('/surveyItemResponses/' + invalid_id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
+    request(app).put('/itemResponses/' + invalid_id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and incomplete data', (done) => {
-    request(app).put('/surveyItemResponses/' + string_id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
+    request(app).put('/itemResponses/' + string_id).set('Accept', /json/).send({survey_item_response: {}}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with invalid id and empty data', (done) => {
-    request(app).put('/surveyItemResponses/' + invalid_id).set('Accept', /json/).send({}).then((response) => {
+    request(app).put('/itemResponses/' + invalid_id).set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test PUT with string id and empty data', (done) => {
-    request(app).put('/surveyItemResponses/' + string_id).set('Accept', /json/).send({}).then((response) => {
+    request(app).put('/itemResponses/' + string_id).set('Accept', /json/).send({}).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });
   });
   test('Test DELETE', (done) => {
-    request(app).delete('/surveyItemResponses/' + dummyItemResponse.id).then((response) => {
+    request(app).delete('/itemResponses/' + dummyItemResponse.id).then((response) => {
       expect(response.statusCode).toBe(204);
       done();
     });
   });
   test('Test DELETE with invalid id', (done) => {
-    request(app).delete('/surveyItemResponses/' + invalid_id).then((response) => {
+    request(app).delete('/itemResponses/' + invalid_id).then((response) => {
       expect(response.statusCode).toBe(404);
       done();
     });
   });
   test('Test DELETE with string id', (done) => {
-    request(app).delete('/surveyItemResponses/' + string_id).then((response) => {
+    request(app).delete('/itemResponses/' + string_id).then((response) => {
       expect(response.statusCode).toBe(400);
       done();
     });

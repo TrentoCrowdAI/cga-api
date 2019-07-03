@@ -11,7 +11,7 @@ const getProjects = (request, response) => {
     [request.session.user.id], (error, results) => {
       if (error) {
         console.log(error);
-        response.status(400).send("Bad Request");
+        response.status(500).send("Internal Server Error");
       }else{
         response.status(200).json(results.rows);
       }

@@ -6,7 +6,7 @@
 const connection = require('./connection');
 const pool = connection.pool;
 
-const getSurveys = (request, response) => {
+const getSubjectSurveys = (request, response) => {
   var data_collection_id = parseInt(request.params.id1);
   var subject_id = parseInt(request.params.id2);
   if(data_collection_id != undefined && !isNaN(data_collection_id) && subject_id != undefined && !isNaN(subject_id)){
@@ -177,7 +177,7 @@ const deleteDataCollection = (request, response) => {
 }
 
 module.exports = {
-  getSurveys,
+  getSubjectSurveys,
   getProjectDataCollections,
   getDataCollectionSubjects,
   getDataCollectionById,

@@ -126,7 +126,7 @@ const deleteUser = (request, response) => {
         }else if(results.rowCount == 0){
           response.status(404).send("User not found");
         }else{
-          response.status(204).send("User deleted with ID: " + id);
+          response.status(204).send({id: id});
         }
       }
     );

@@ -26,11 +26,11 @@ const getSurveyItemResponses = (request, response) => {
 }
 
 const getSurveyItemResponseById = (request, response) => {
-  var survey_component_id = parseInt(request.params.id);
+  var survey_item_response_id = parseInt(request.params.id);
   
-  if(survey_component_id != undefined && !isNaN(survey_component_id)){
+  if(survey_item_response_id != undefined && !isNaN(survey_item_response_id)){
     pool.query('SELECT * FROM survey_item_response WHERE id = $1', 
-      [survey_component_id], (error, results) => {
+      [survey_item_response_id], (error, results) => {
         if (error) {
           console.log(error);
           response.status(500).send("Internal Server Error");

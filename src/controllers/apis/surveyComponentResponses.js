@@ -15,8 +15,8 @@ exports.init = function (app) { //assign the subject that is part of a survey to
 
   app.delete('/componentResponses/:id', isLoggedIn, dbSurveyComponentResponse.deleteSurveyComponentResponse);
 
-  app.get('/componentResponses/:id/surveyItemResponses', isLoggedIn, dbSurveyItemResponse.getSurveyItemResponses);
+  app.get('/componentResponses/:id/itemResponses', isLoggedIn, dbSurveyItemResponse.getSurveyItemResponses);
 
-  app.post('/componentResponses/:id/surveyItemResponses', isLoggedIn, dbSurveyItemResponse.createSurveyItemResponse);
+  app.post('/componentResponses/:id/itemResponses', isLoggedIn, dbSurveyItemResponse.createSurveyItemResponse);
 
 };

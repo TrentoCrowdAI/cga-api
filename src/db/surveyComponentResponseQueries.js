@@ -71,7 +71,7 @@ const createSurveyComponentResponse = (request, response) => {
                 }
               );
             }else{
-              response.status(403).send("User not authorized");
+              response.status(403).send("Not Authorized");
             }
           }
         );

@@ -42,17 +42,11 @@ beforeAll(async () => {
                   dummySubject.id = response.body.id;
                   dummyResponse.subject_id = response.body.id;
                   await request(app).post('/surveys/' + dummySurvey.id + "/subjects").set('Accept', /json/).send({subject: dummySubject}).then(async (response) => {
-                    dummyResponse.id = response.body[0].id;
-                    dummyResponse.status = response.body[0].status;
-                    dummyResponse.creation_date = response.body[0].creation_date;
-                    dummyComponentResponse.survey_response_id = response.body[0].id;
+                    dummyResponse.id = response.body.id;
+                    dummyComponentResponse.survey_response_id = response.body.id;
                     await request(app).post('/responses/' + dummyResponse.id + "/componentResponses").set('Accept', /json/).send({survey_component_response: dummyComponentResponse}).then((response) => {
-                      dummyComponentResponse.id = response.body[0].id;
-                      dummyComponentResponse.status = response.body[0].status;
-                      dummyComponentResponse.creation_date = response.body[0].creation_date;
-                      dummyComponentResponse.survey_response_id = response.body[0].survey_response_id;
-                      dummyComponentResponse.user_id = response.body[0].user_id;
-                      dummyItemResponse.survey_component_response_id = response.body[0].id;
+                      dummyComponentResponse.id = response.body.id;
+                      dummyItemResponse.survey_component_response_id = response.body.id;
                     });
                   });
                 });

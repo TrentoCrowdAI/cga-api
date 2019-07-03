@@ -12,7 +12,7 @@ const session = require('cookie-session');
 // Import Google OAuth apps config
 const {google} = require('./config');
 const dbUser = require('./db/userQueries');
-
+/*
 // Transform Google profile into user object 
 const transformGoogleProfile = (profile) => {
     //console.log(profile);
@@ -38,12 +38,12 @@ passport.use(new GoogleStrategy(google,
         return done(null, transformGoogleProfile(profile._json));
     }
 ));
-
+*/
 // Inzialize http server
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+/*
 app.use(session({  
   secret: process.env.SESSION_SECRET || 'default_session_secret',
   resave: false,
@@ -53,7 +53,7 @@ app.use(session({
 // Inzialize passport 
 app.use(passport.initialize());
 app.use(passport.session());
-
+*/
 // Set up Google auth routes
 app.get('/auth/google', passport.authenticate('google', {scope: ['profile'] }));
 
@@ -63,8 +63,11 @@ app.get('/auth/google/callback', passport.authenticate('google', {failureRedirec
 });
 
 app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
+  req.session.destroy(function(err){
+    req.logout();
+    res.writeHead(301, { "Location": "http://cga-api.herokuapp.com/"});
+    res.end();
+  });
 });
 
 app.get('/', function(req, res){

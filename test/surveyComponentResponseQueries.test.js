@@ -40,10 +40,8 @@ beforeAll(async () => {
                   dummySubject.id = response.body.id;
                   dummyResponse.subject_id = response.body.id;
                   await request(app).post('/surveys/' + dummySurvey.id + "/subjects").set('Accept', /json/).send({subject: dummySubject}).then((response) => {
-                    dummyResponse.id = response.body[0].id;
-                    dummyResponse.status = response.body[0].status;
-                    dummyResponse.creation_date = response.body[0].creation_date;
-                    dummyComponentResponse.survey_response_id = response.body[0].id;
+                    dummyResponse.id = response.body.id;
+                    dummyComponentResponse.survey_response_id = response.body.id;
                   });
                 });
               });
@@ -88,17 +86,17 @@ describe('Test /responses/:id/componentResponses method root path', () => {
   test('Test POST method', (done) => {
     request(app).post('/responses/' + dummyResponse.id + "/componentResponses").set('Accept', /json/).send({survey_component_response: dummyComponentResponse}).then((response) => {
       expect(response.statusCode).toBe(201);
-      dummyComponentResponse.id = response.body[0].id;
-      dummyComponentResponse.status = response.body[0].status;
-      dummyComponentResponse.creation_date = response.body[0].creation_date;
-      dummyComponentResponse.survey_response_id = response.body[0].survey_response_id;
-      dummyComponentResponse.user_id = response.body[0].user_id;
+      dummyComponentResponse.id = response.body.id;
       done();
     });
   });
   test('Test GET method after data creation', (done) => {
     request(app).get('/responses/' + dummyResponse.id + "/componentResponses").then((response) => {
       expect(response.statusCode).toBe(200);
+      dummyComponentResponse.status = response.body[0].status;
+      dummyComponentResponse.creation_date = response.body[0].creation_date;
+      dummyComponentResponse.survey_response_id = response.body[0].survey_response_id;
+      dummyComponentResponse.user_id = response.body[0].user_id;
       expect(response.body.length).not.toBe(0);
       done();
     });

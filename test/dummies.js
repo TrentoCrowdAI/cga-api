@@ -14,7 +14,8 @@ let dummyUser = {
 let dummyProject = {
   name: 'test',
   description: 'cga test',
-  user_id: dummyUser.id
+  user_id: dummyUser.id,
+  creation_date:"2019-01-01T02:00:00.000Z",
 };
 
 let dummyDataCollection = {

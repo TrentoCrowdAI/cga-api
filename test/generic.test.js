@@ -40,10 +40,8 @@ beforeAll(async () => {
                   dummySubject.id = response.body.id;
                   dummyResponse.subject_id = response.body.id;
                   await request(app).post('/surveys/' + dummySurvey.id + "/subjects").set('Accept', /json/).send({subject: dummySubject}).then((response) => {
-                    dummyResponse.id = response.body[0].id;
-                    dummyResponse.status = response.body[0].status;
-                    dummyResponse.creation_date = response.body[0].creation_date;
-                    dummyComponentResponse.survey_response_id = response.body[0].id;
+                    dummyResponse.id = response.body.id;
+                    dummyComponentResponse.survey_response_id = response.body.id;
                   });
                 });
               });

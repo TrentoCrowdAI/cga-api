@@ -55,7 +55,7 @@ const createProject = (request, response) => {
                 console.log(error2);
                 response.status(500).send("Internal Server Error");
               }else if(results2.rowCount != 0){
-                response.status(201).send(results.rows[0]);
+                response.status(201).send({id: results.rows[0].id});
               }
             }
           );

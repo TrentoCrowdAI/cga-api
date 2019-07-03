@@ -78,15 +78,15 @@ describe('Test /surveys/:id/responses method root path', () => {
   test('Test POST method', (done) => {
     request(app).post('/surveys/' + dummySurvey.id + "/subjects").set('Accept', /json/).send({subject: dummySubject}).then((response) => {
       expect(response.statusCode).toBe(201);
-      dummyResponse.id = response.body[0].id;
-      dummyResponse.status = response.body[0].status;
-      dummyResponse.creation_date = response.body[0].creation_date;
+      dummyResponse.id = response.body.id;
       done();
     });
   });
   test('Test GET method after data creation', (done) => {
     request(app).get('/surveys/' + dummySurvey.id + "/responses").then((response) => {
       expect(response.statusCode).toBe(200);
+      dummyResponse.status = response.body[0].status;
+      dummyResponse.creation_date = response.body[0].creation_date;
       expect(response.body.length).not.toBe(0);
       done();
     });

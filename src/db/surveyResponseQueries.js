@@ -36,7 +36,7 @@ const addSubjectToSurvey = (request, response) => {
             console.log(error);
             response.status(500).send("Internal Server Error");
           }else if(results.rowCount != 0){
-            response.status(201).send(results.rows);
+            response.status(201).send({id: results.rows[0].id});
           }
         }
       );
